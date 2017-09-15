@@ -1,0 +1,140 @@
+package conexao;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import usuario.bean.UsuarioBean;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import mensagem.bean.MensagemBean;
+import mensagem.bean.TipoMensagem;
+import org.json.JSONObject;
+import pessoa.bean.PessoaBean;
+import util.FrameWork;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author Galvani Júnior
+ */
+public class ConexaoController {
+
+    private static Socket servidor = null;
+    private static UsuarioBean usuario;
+    private static Writer escrita;
+    private static BufferedReader leitura;
+
+    private static void fazConexao() {
+        try {
+            // Inicia troca de socket com servidor
+            servidor = new Socket(ConfiguracaoServidor.getHost(), ConfiguracaoServidor.getPort());
+            escrita = new BufferedWriter(new OutputStreamWriter(servidor.getOutputStream(), "UTF-8"));
+            leitura = new BufferedReader(new InputStreamReader(servidor.getInputStream(), "UTF-8"));
+        } catch (IOException ex) {
+            throw new ConexaoException("Verifique sua conexão.");
+        }
+    }
+
+    private static void fechaConexao() {
+        try {
+            escrita.close();
+            leitura.close();
+            servidor.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static boolean cadastra(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
+        try {
+            fazConexao();
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.CADASTRAR.name(), usuario, pessoa);
+            JSONObject json = mensagem.toJson();
+            escrita.write(json.toString() + "\n");
+            escrita.flush();
+            String linha = leitura.readLine();
+            json = new JSONObject(linha);
+            mensagem = MensagemBean.toObject(json);
+            if (mensagem.getTipo().equals(TipoMensagem.SUCESSO.name())) {
+                return true;
+            }
+            throw new CadastroException(mensagem.getMensagem());
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            fechaConexao();
+        }
+        return false;
+    }
+
+    public static boolean login(String login, String senha) {
+        try {
+            fazConexao();
+            UsuarioBean u = new UsuarioBean();
+            u.setLogin(login);
+            u.setSenha(FrameWork.criptografar(senha));
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.LOGIN.name(), u);
+
+            JSONObject json = mensagem.toJson();
+            escrita.write(json.toString() + "\n");
+            escrita.flush();
+
+            String linha = leitura.readLine();
+            json = new JSONObject(linha);
+            System.out.println(json);
+
+            mensagem = MensagemBean.toObject(json);
+            if (mensagem.getTipo().equals(TipoMensagem.SUCESSO.name())) {
+                ConexaoController.usuario = mensagem.getUsuario();
+                iniciaThread();
+                return true;
+            } else {
+                fechaConexao();
+                throw new LoginException(mensagem.getMensagem());
+            }
+        } catch (IOException ex) {
+            fechaConexao();
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public static void logout() {
+        try {
+            MensagemBean m = new MensagemBean(TipoMensagem.LOGOUT.name());
+            if (servidor != null) {
+                escrita.write(m.toJson().toString());
+                fechaConexao();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void iniciaThread() {
+        // Exibe mensagem de sucesso no terminal
+        System.out.println("Conexão concluída ao servidor " + servidor.getInetAddress());
+        // Cria uma thread para receber mensagens do servidor
+        // ThreadConexao thread = new ThreadConexao(entrada, usuario);
+        //   new Thread(thread).start();
+    }
+
+    public static void enviaMensagem(String texto) throws IOException {
+        JSONObject json = new JSONObject();
+        MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM.name(), usuario, texto);
+        escrita.write(mensagem.toJson().toString());
+    }
+
+}
