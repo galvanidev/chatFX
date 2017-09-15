@@ -7,6 +7,7 @@ package mensagem.bean;
 
 import java.io.Serializable;
 import java.time.LocalTime;
+import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pessoa.bean.PessoaBean;
@@ -27,30 +28,44 @@ public class MensagemBean implements Serializable {
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        if (this.tipo != null)
+        if (this.tipo != null) {
             json.put("tipo", this.tipo);
-        if (this.mensagem != null)
+        }
+        if (this.mensagem != null) {
             json.put("mensagem", this.mensagem);
-        if (this.usuarios != null)
-            json.put("usuarios", this.usuarios);
-        if (this.usuario != null)
+        }
+        if (this.usuarios != null) {
+            JSONArray array = new JSONArray(this.usuarios);
+            json.put("usuarios", array);
+        }
+        if (this.usuario != null) {
             json.put("usuario", this.usuario.toJson());
-        if (this.pessoa != null)
+        }
+        if (this.pessoa != null) {
             json.put("pessoa", this.pessoa.toJson());
-        if (this.hora != null)
+        }
+        if (this.hora != null) {
             json.put("hora", this.hora);
+        }
         return json;
     }
 
     public static MensagemBean toObject(JSONObject json) {
         MensagemBean m = new MensagemBean();
-        if (json.has("tipo"))
-            m.setTipo(json.getString("tipo"));
-        if (json.has("mensagem")) 
+        if (json.has("tipo")) {
+            String tipo = json.getString("tipo");
+            m.setTipo(TipoMensagem.valueOf(tipo));
+        }
+        if (json.has("mensagem")) {
             m.setMensagem(json.getString("mensagem"));
+        }
         if (json.has("usuarios")) {
             JSONArray us = (JSONArray) json.get("usuarios");
-            m.setUsuarios(UsuarioBean.toArrayObject(us));
+            UsuarioBean[] usuarios = new UsuarioBean[us.length()];
+            for (int i = 0; i < us.length(); i++) {
+               usuarios[i] = UsuarioBean.toObject(us.getJSONObject(i));
+            }
+            m.setUsuarios(usuarios);
         }
         if (json.has("usuario")) {
             JSONObject u = (JSONObject) json.get("usuario");
@@ -66,9 +81,6 @@ public class MensagemBean implements Serializable {
         return m;
     }
 
-    public MensagemBean() {
-    }
-
     private MensagemBean(JSONObject json) {
         this.tipo = json.getString("tipo");
         this.mensagem = json.getString("mensagem");
@@ -77,33 +89,45 @@ public class MensagemBean implements Serializable {
         this.pessoa = (PessoaBean) json.get("pessoa");
         this.hora = (LocalTime) json.get("hora");
     }
-    
-    public MensagemBean(String tipo) {
-        this.tipo = tipo;
-    }    
-    
-    public MensagemBean(String tipo, UsuarioBean usuario) {
-        this(tipo);
-        this.usuario = usuario;
+
+    public MensagemBean() {
     }
 
-    public MensagemBean(String tipo, UsuarioBean usuario, String mensagem) {
+    public MensagemBean(TipoMensagem tipo) {
+        this.tipo = tipo.name();
+    }
+
+    public MensagemBean(TipoMensagem tipo, String mensagem) {
         this(tipo);
-        this.usuario = usuario;
         this.mensagem = mensagem;
     }
 
-    public MensagemBean(String tipo, UsuarioBean usuario, PessoaBean pessoa) {
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario) {
+        this(tipo);
+        this.usuario = usuario;
+    }
+
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, PessoaBean pessoa) {
         this(tipo, usuario);
         this.pessoa = pessoa;
     }
 
-    public String getTipo() {
-        return tipo;
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, String mensagem) {
+        this(tipo, mensagem);
+        this.usuario = usuario;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, PessoaBean pessoa, String mensagem) {
+        this(tipo, usuario, mensagem);
+        this.pessoa = pessoa;
+    }
+
+    public TipoMensagem getTipo() {
+        return TipoMensagem.valueOf(tipo);
+    }
+
+    public void setTipo(TipoMensagem tipo) {
+        this.tipo = tipo.name();
     }
 
     public String getMensagem() {
@@ -145,7 +169,5 @@ public class MensagemBean implements Serializable {
     public void setHora(LocalTime hora) {
         this.hora = hora;
     }
-    
-    
 
 }

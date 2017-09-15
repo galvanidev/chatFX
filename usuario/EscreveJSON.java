@@ -26,7 +26,7 @@ public class EscreveJSON {
         
         PessoaBean p = new PessoaBean();
         p.setNome("Galvani");
-        MensagemBean m = new MensagemBean(TipoMensagem.CADASTRAR.name(), u, p);
+        MensagemBean m = new MensagemBean(TipoMensagem.CADASTRAR, u, p);
         
         System.out.println(m.toJson());
         

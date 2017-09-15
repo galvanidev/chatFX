@@ -28,8 +28,8 @@ import util.DaoException;
 public class ThreadCadastro {
 
     public MensagemBean mensagem = new MensagemBean();
-    private PessoaBean retornoP;
-    private UsuarioBean retornoU;
+    private PessoaBean retornoP = null;
+    private PessoaBean retornoU = null;
     private PessoaDAO pdao = new PessoaDAO();
     private UsuarioDAO udao = new UsuarioDAO();
 
@@ -37,24 +37,29 @@ public class ThreadCadastro {
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<MensagemBean> futureResult = executor.submit(() -> {
-
+                
+                
                 boolean pessoaExiste = pdao.existe(pessoa);
                 boolean usuarioExiste = udao.existe(usuario);
 
                 if (!pessoaExiste && !usuarioExiste) {
                     retornoP = (PessoaBean) pdao.inserir(pessoa);
                     usuario.setPessoa(retornoP);
-                    retornoU = (UsuarioBean) udao.inserir(usuario);
-                    mensagem.setTipo(TipoMensagem.SUCESSO.name());
+                    retornoU = (PessoaBean) udao.inserir(usuario);
+                    mensagem.setTipo(TipoMensagem.SUCESSO);
                     mensagem.setMensagem("Usuário cadastrado com sucesso.");
                     return mensagem;
                 } else {
                     if (pessoaExiste) {
-                        mensagem.setTipo(TipoMensagem.ERRO.name());
+                        mensagem.setPessoa(null);
+                        mensagem.setUsuario(null);
+                        mensagem.setTipo(TipoMensagem.ERRO);
                         mensagem.setMensagem("Esta pessoa já possui cadastro._");
                     }
                     if (usuarioExiste) {
-                        mensagem.setTipo(TipoMensagem.ERRO.name());
+                        mensagem.setPessoa(null);
+                        mensagem.setUsuario(null);
+                        mensagem.setTipo(TipoMensagem.ERRO);
                         mensagem.setMensagem(mensagem.getMensagem() + "Usuário indisponível._");
                     }
                 }
@@ -63,8 +68,7 @@ public class ThreadCadastro {
             this.mensagem = futureResult.get();
             executor.shutdown();
         } catch (InterruptedException | ExecutionException ex) {
-            // Logger.getLogger(ThreadCadastro.class.getName()).log(Level.SEVERE, null, ex);
+            mensagem = new MensagemBean(TipoMensagem.ERRO, "Favor tentar novamente mais tarde");
         }
     }
-
 }

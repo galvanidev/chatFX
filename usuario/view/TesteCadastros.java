@@ -39,7 +39,7 @@ public class TesteCadastros {
         // existir pessoa e não funcionar
         // existir o usuário e não funcionar
 
-        UsuarioBean u = new UsuarioBean();
+        PessoaBean u = new PessoaBean();
         u.setUsuario("galvani2");
         u.setEmail("asdasd.da");
         u.setSenha("asdasdas");

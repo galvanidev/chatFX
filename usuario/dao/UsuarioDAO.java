@@ -57,12 +57,11 @@ public class UsuarioDAO implements BaseDAO {
     public Object alterar(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "UPDATE usuario SET usuario = ?, email = ?, senha = ? WHERE id = ?";
+            String sql = "UPDATE usuario SET email = ?, senha = ? WHERE id = ?";
             pst = con.prepareStatement(sql);
             UsuarioBean usuario = (UsuarioBean) obj;
-            pst.setString(1, usuario.getLogin());
-            pst.setString(2, usuario.getEmail());
-            pst.setString(3, usuario.getSenha());
+            pst.setString(1, usuario.getEmail());
+            pst.setString(2, usuario.getSenha());
             pst.setInt(3, usuario.getId());
             pst.execute();
             return usuario;

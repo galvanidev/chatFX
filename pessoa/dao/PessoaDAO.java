@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.postgresql.util.PSQLException;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.BaseDAO;
@@ -59,11 +60,13 @@ public class PessoaDAO implements BaseDAO {
     public Object alterar(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "UPDATE pessoa SET nome = ? WHERE id = ?";
+            String sql = "UPDATE pessoa SET nome = ?, data_nascimento = ?, sexo = ?  WHERE id = ?";
             pst = con.prepareStatement(sql);
             PessoaBean pessoa = (PessoaBean) obj;
             pst.setString(1, pessoa.getNome());
-            pst.setInt(3, pessoa.getId());
+            pst.setObject(2, pessoa.getDataNascimento());
+            pst.setString(3, String.valueOf(pessoa.getSexo()));
+            pst.setInt(4, pessoa.getId());
             pst.execute();
             return pessoa;
         } catch (SQLException ex) {
@@ -140,7 +143,7 @@ public class PessoaDAO implements BaseDAO {
         return null;
     }
 
-    public boolean existe(Object obj) {
+    public boolean existe(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
             String sql = "SELECT id FROM pessoa WHERE cpf like ?";

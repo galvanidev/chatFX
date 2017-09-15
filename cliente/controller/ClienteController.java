@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import java.net.SocketException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,8 +77,7 @@ public class ClienteController {
     @FXML
     public void selecionaItem(MouseEvent ev) {
         if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
-            System.out.println(listaUsuarios.getSelectionModel().getSelectedItem().getPessoa().getNome());
-            System.out.println(listaUsuarios.getSelectionModel().getSelectedItem().getPessoa().getNome());
+            
         }
     }
         

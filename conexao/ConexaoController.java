@@ -5,20 +5,16 @@ import java.io.BufferedWriter;
 import usuario.bean.UsuarioBean;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
 import org.json.JSONObject;
-import pessoa.bean.PessoaBean;
 import util.FrameWork;
+import pessoa.bean.PessoaBean;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -60,14 +56,14 @@ public class ConexaoController {
     public static boolean cadastra(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
         try {
             fazConexao();
-            MensagemBean mensagem = new MensagemBean(TipoMensagem.CADASTRAR.name(), usuario, pessoa);
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.CADASTRAR, usuario, pessoa);
             JSONObject json = mensagem.toJson();
             escrita.write(json.toString() + "\n");
             escrita.flush();
             String linha = leitura.readLine();
             json = new JSONObject(linha);
             mensagem = MensagemBean.toObject(json);
-            if (mensagem.getTipo().equals(TipoMensagem.SUCESSO.name())) {
+            if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 return true;
             }
             throw new CadastroException(mensagem.getMensagem());
@@ -85,7 +81,7 @@ public class ConexaoController {
             UsuarioBean u = new UsuarioBean();
             u.setLogin(login);
             u.setSenha(FrameWork.criptografar(senha));
-            MensagemBean mensagem = new MensagemBean(TipoMensagem.LOGIN.name(), u);
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.LOGIN, u);
 
             JSONObject json = mensagem.toJson();
             escrita.write(json.toString() + "\n");
@@ -96,7 +92,7 @@ public class ConexaoController {
             System.out.println(json);
 
             mensagem = MensagemBean.toObject(json);
-            if (mensagem.getTipo().equals(TipoMensagem.SUCESSO.name())) {
+            if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 ConexaoController.usuario = mensagem.getUsuario();
                 iniciaThread();
                 return true;
@@ -113,7 +109,7 @@ public class ConexaoController {
 
     public static void logout() {
         try {
-            MensagemBean m = new MensagemBean(TipoMensagem.LOGOUT.name());
+            MensagemBean m = new MensagemBean(TipoMensagem.LOGOUT);
             if (servidor != null) {
                 escrita.write(m.toJson().toString());
                 fechaConexao();
@@ -133,7 +129,7 @@ public class ConexaoController {
 
     public static void enviaMensagem(String texto) throws IOException {
         JSONObject json = new JSONObject();
-        MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM.name(), usuario, texto);
+        MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
         escrita.write(mensagem.toJson().toString());
     }
 

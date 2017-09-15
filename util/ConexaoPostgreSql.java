@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * JDBC
  */
 public class ConexaoPostgreSql {
-    public static Connection getConexao() {
+    public static Connection getConexao() throws SQLException {
         Connection connection = null;
         String url = "org.postgresql.Driver";
         String bd = "jdbc:postgresql://192.168.33.10:5433/estudos";
