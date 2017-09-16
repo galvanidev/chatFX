@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
-import org.postgresql.util.PSQLException;
 import pessoa.bean.PessoaBean;
 import pessoa.dao.PessoaDAO;
 import usuario.bean.UsuarioBean;

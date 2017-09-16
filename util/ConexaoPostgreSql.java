@@ -18,9 +18,9 @@ public class ConexaoPostgreSql {
     public static Connection getConexao() throws SQLException {
         Connection connection = null;
         String url = "org.postgresql.Driver";
-        String bd = "jdbc:postgresql://192.168.33.10:5433/estudos";
-        String usuario = "postgres";
-        String senha = "postgres";
+        String bd = "jdbc:postgresql://127.0.0.1:5432/homestead";
+        String usuario = "homestead";
+        String senha = "secret";
         try {
             Class.forName(url);
             connection = DriverManager.getConnection(bd, usuario, senha);

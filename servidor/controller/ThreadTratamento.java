@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 import usuario.bean.UsuarioBean;
 
@@ -21,7 +22,7 @@ import usuario.bean.UsuarioBean;
  * @author Galvani Júnior
  */
 public class ThreadTratamento implements Runnable {
-    
+
     private static Socket socket;
     private static BufferedReader read;
     private static OutputStreamWriter writer;
@@ -41,14 +42,17 @@ public class ThreadTratamento implements Runnable {
         try {
             while (read.read() != -1) {
                 linha = read.readLine();
-                if (linha == null) { continue; };
-                json = new JSONObject(linha.split(""));
+                System.out.println("recebeu");
+                if (linha == null) {
+                    continue;
+                };
+                json = new JSONObject(linha);
                 ServidorController.enviaMensagem(json);
             }
-            System.out.println("caiu");
+        } catch (IOException | JSONException ex) {
+            // Exceção quando o cliente manda campos "";
+        } finally {
             ServidorController.removeCliente(usuario, socket, read, writer);
-        } catch (IOException ex) {
-            ex.getStackTrace();
         }
     }
 }

@@ -42,9 +42,9 @@ public class TesteMensagem {
         p.setCpf("000-000-000-00");
         p.setDataNascimento(LocalDate.of(1993, 11, 3));
         p.setSexo("M");
-
+        /*
         try {
-            ConexaoController.login("juniiorlima", "123");
+            ConexaoController.login("gal2", "123");
             Scanner s = new Scanner(System.in);
             while(true) {
                 ConexaoController.enviaMensagem(s.nextLine());

@@ -28,9 +28,9 @@ import pessoa.bean.PessoaBean;
 public class ConexaoController {
 
     private static Socket servidor = null;
-    private static UsuarioBean usuario;
     private static Writer escrita;
     private static BufferedReader leitura;
+    private static UsuarioBean usuario;
 
     private static void fazConexao() {
         try {
@@ -43,7 +43,7 @@ public class ConexaoController {
         }
     }
 
-    private static void fechaConexao() {
+    public static void fechaConexao(Socket servidor, BufferedReader leitura, Writer escrita) {
         try {
             escrita.close();
             leitura.close();
@@ -71,7 +71,7 @@ public class ConexaoController {
         } catch (IOException ex) {
             Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            fechaConexao();
+            fechaConexao(servidor, leitura, escrita);
         }
     }
 
@@ -90,10 +90,10 @@ public class ConexaoController {
         } catch (IOException ex) {
             Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            fechaConexao();
+            fechaConexao(servidor, leitura, escrita);
         }
     }
-    
+
     public static boolean login(String login, String senha) {
         try {
             fazConexao();
@@ -105,52 +105,48 @@ public class ConexaoController {
             JSONObject json = mensagem.toJson();
             escrita.write(json.toString() + "\n");
             escrita.flush();
-            
+
             String linha = leitura.readLine();
-            
+
             json = new JSONObject(linha);
             mensagem = MensagemBean.toObject(json);
-            
+
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 ConexaoController.usuario = mensagem.getUsuario();
                 iniciaThread();
                 return true;
             } else {
-                fechaConexao();
+                fechaConexao(servidor, leitura, escrita);
                 throw new LoginException(mensagem.getMensagem());
             }
         } catch (IOException ex) {
-            fechaConexao();
+            fechaConexao(servidor, leitura, escrita);
             Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
 
     public static void logout() {
-        try {
-            MensagemBean m = new MensagemBean(TipoMensagem.LOGOUT);
-            if (servidor != null) {
-                escrita.write(m.toJson().toString() + "\n");
-                escrita.flush();
-                fechaConexao();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        fechaConexao(servidor, leitura, escrita);
     }
 
     private static void iniciaThread() {
         // Exibe mensagem de sucesso no terminal
         System.out.println("Autenticado no servidor: " + servidor.getInetAddress());
         // Cria uma thread para receber mensagens do servidor
-        ThreadConexao thread = new ThreadConexao(leitura, usuario);
+        ThreadConexao thread = new ThreadConexao(servidor, leitura, escrita);
         new Thread(thread).start();
     }
 
-    public static void enviaMensagem(String texto) throws IOException {
-        MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
-        escrita.write(mensagem.toJson().toString() + "\n");
-        escrita.flush();
+    public static void enviaMensagem(String texto) {
+        try {
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
+            escrita.write(mensagem.toJson().toString() + "\n");
+            escrita.flush();
+        } catch (IOException ex) {
+            // Quando o servidor cai e o usuário tenta enviar mensagem;
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

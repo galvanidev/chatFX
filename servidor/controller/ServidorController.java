@@ -40,7 +40,7 @@ public final class ServidorController {
             leitor.close();
             escritor.close();
             socket.close();
-            System.out.println("conexões fechadas");
+            System.out.println("fechou as conexões");
         } catch (IOException ex) {
             Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,7 +65,7 @@ public final class ServidorController {
         });
     }
 
-    private static void adicionarCliente(UsuarioBean usuario, OutputStreamWriter writer) throws IOException {
+    private static void adicionarCliente(UsuarioBean usuario, OutputStreamWriter writer, BufferedReader read) throws IOException {
         listaUsuarios.put(usuario, writer);
         UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
         MensagemBean m = new MensagemBean();
@@ -115,6 +115,7 @@ public final class ServidorController {
                     // Pega referência das io do socket
                     escrita = new OutputStreamWriter(client.getOutputStream(), "UTF-8");
                     leitura = new BufferedReader(new InputStreamReader(client.getInputStream(), "UTF-8"));
+                    
                     //  Recebe mensagem do cliente
                     String linha = leitura.readLine();
                     JSONObject json = new JSONObject(linha);
@@ -146,7 +147,7 @@ public final class ServidorController {
                             } else {
                                 mensagem.setTipo(TipoMensagem.SUCESSO);
                                 escrita.write(mensagem.toJson().toString() + "\n");
-                                adicionarCliente(mensagem.getUsuario(), escrita);
+                                adicionarCliente(mensagem.getUsuario(), escrita, leitura);
                                 // Cria um Tratador de Clientes em Thread separada
                                 ThreadTratamento tc = new ThreadTratamento(client, leitura, escrita, mensagem.getUsuario());
                                 new Thread(tc).start();

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.postgresql.util.PSQLException;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.BaseDAO;

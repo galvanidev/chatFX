@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.postgresql.util.PSQLException;
 import pessoa.bean.PessoaBean;
 import pessoa.dao.PessoaDAO;
 import servidor.controller.ThreadCadastro;

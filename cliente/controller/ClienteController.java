@@ -6,18 +6,14 @@
 package cliente.controller;
 
 import conexao.ConexaoController;
-import java.io.IOException;
 import usuario.model.UsuarioModel;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
@@ -64,14 +60,9 @@ public class ClienteController {
 
     @FXML
     private void enviarMensagem() {
-        try {
-            ConexaoController.enviaMensagem(tfMensagem.getText());
-            tfMensagem.setText("");
-            tfMensagem.requestFocus();
-        } catch (IOException ex) {
-            Logger.getLogger(ClienteController.class.getName()).log(Level.SEVERE, null, ex);
-            ConexaoController.logout();
-        }
+        ConexaoController.enviaMensagem(tfMensagem.getText());
+        tfMensagem.setText("");
+        tfMensagem.requestFocus();
     }
 
     @FXML
