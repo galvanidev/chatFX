@@ -35,11 +35,12 @@ public final class ServidorController {
     private static BufferedReader leitura;
     private static Thread thread;
 
-    private static void fechaConexao() {
+    private static void fechaConexao(Socket socket, BufferedReader leitor, OutputStreamWriter escritor) {
         try {
-            escrita.close();
-            leitura.close();
-            cliente.close();
+            leitor.close();
+            escritor.close();
+            socket.close();
+            System.out.println("conexões fechadas");
         } catch (IOException ex) {
             Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,10 +74,9 @@ public final class ServidorController {
         enviaMensagem(m.toJson());
     }
 
-    public static void removeCliente(UsuarioBean usuario) {
-        BufferedReader rd = listaUsuarios.get(usuario);
+    public static void removeCliente(UsuarioBean usuario, Socket socket, BufferedReader leitor, OutputStreamWriter escritor) {
         listaUsuarios.remove(usuario);
-        fechaConexao();
+        fechaConexao(socket, leitor, escritor);
     }
 
     private static MensagemBean autentica(UsuarioBean u) {
@@ -107,14 +107,14 @@ public final class ServidorController {
     }
 
     private static void trataCliente() {
-
+        Socket client = cliente;
         thread = new Thread() {
             @Override
             public void run() {
                 try {
                     // Pega referência das io do socket
-                    escrita = new OutputStreamWriter(cliente.getOutputStream(), "UTF-8");
-                    leitura = new BufferedReader(new InputStreamReader(cliente.getInputStream(), "UTF-8"));
+                    escrita = new OutputStreamWriter(client.getOutputStream(), "UTF-8");
+                    leitura = new BufferedReader(new InputStreamReader(client.getInputStream(), "UTF-8"));
                     //  Recebe mensagem do cliente
                     String linha = leitura.readLine();
                     JSONObject json = new JSONObject(linha);
@@ -148,7 +148,7 @@ public final class ServidorController {
                                 escrita.write(mensagem.toJson().toString() + "\n");
                                 adicionarCliente(mensagem.getUsuario(), leitura);
                                 // Cria um Tratador de Clientes em Thread separada
-                                ThreadTratamento tc = new ThreadTratamento(leitura);
+                                ThreadTratamento tc = new ThreadTratamento(client, leitura, escrita, mensagem.getUsuario());
                                 new Thread(tc).start();
                             }
                         }
