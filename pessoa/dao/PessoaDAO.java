@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -60,13 +61,14 @@ public class PessoaDAO implements BaseDAO {
     public Object alterar(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "UPDATE pessoa SET nome = ?, data_nascimento = ?, sexo = ?  WHERE id = ?";
-            pst = con.prepareStatement(sql);
             PessoaBean pessoa = (PessoaBean) obj;
+            String sql = "UPDATE pessoa SET nome = ?, cpf = ?, data_nascimento = ?, sexo = ?  WHERE id = ?";
+            pst = con.prepareStatement(sql);
             pst.setString(1, pessoa.getNome());
-            pst.setObject(2, pessoa.getDataNascimento());
-            pst.setString(3, String.valueOf(pessoa.getSexo()));
-            pst.setInt(4, pessoa.getId());
+            pst.setString(2, pessoa.getCpf());
+            pst.setObject(3, pessoa.getDataNascimento());
+            pst.setString(4, String.valueOf(pessoa.getSexo()));
+            pst.setInt(5, pessoa.getId());
             pst.execute();
             return pessoa;
         } catch (SQLException ex) {
@@ -118,19 +120,17 @@ public class PessoaDAO implements BaseDAO {
         return null;
     }
 
-    @Override
-    public Object selecionar(Integer codigo) throws DaoException {
+    public Integer selecionar(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "SELECT * FROM pessoa WHERE id = ?";
+            String sql = "SELECT * FROM pessoa WHERE cpf = ?";
             pst = con.prepareStatement(sql);
-            pst.setInt(1, codigo);
+            PessoaBean pessoa = (PessoaBean) obj;
+            pst.setString(1, pessoa.getCpf());
             rs = pst.executeQuery();
             if (rs.next()) {
-                PessoaBean pessoa = new PessoaBean();
                 pessoa.setId(rs.getInt(1));
-                pessoa.setNome(rs.getString("nome"));
-                return pessoa;
+                return pessoa.getId();
             }
 
         } catch (SQLException ex) {
@@ -146,7 +146,7 @@ public class PessoaDAO implements BaseDAO {
     public boolean existe(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "SELECT id FROM pessoa WHERE cpf like ?";
+            String sql = "SELECT id FROM pessoa WHERE cpf = ?";
             pst = con.prepareStatement(sql);
             PessoaBean pessoa = (PessoaBean) obj;
             pst.setString(1, pessoa.getCpf());
@@ -162,6 +162,34 @@ public class PessoaDAO implements BaseDAO {
             ConexaoPostgreSql.fechar(con);
         }
         return false;
+    }
+
+    @Override
+    public Object selecionar(Integer codigo) throws DaoException {
+        try {
+            con = ConexaoPostgreSql.getConexao();
+            String sql = "SELECT * FROM pessoa WHERE id = ?";
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, codigo);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                PessoaBean pessoa = new PessoaBean();
+                pessoa.setId(rs.getInt(1));
+                pessoa.setNome(rs.getString("nome"));
+                pessoa.setDataNascimento(LocalDate.parse(rs.getString("data_nascimento")));
+                pessoa.setSexo(rs.getString("sexo"));
+                pessoa.setCpf(rs.getString("cpf"));
+                return pessoa;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PessoaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConexaoPostgreSql.fechar(pst);
+            ConexaoPostgreSql.fechar(rs);
+            ConexaoPostgreSql.fechar(con);
+        }
+        return null;
     }
 
 }

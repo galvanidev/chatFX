@@ -121,7 +121,7 @@ public final class ServidorController {
                     MensagemBean mensagem = MensagemBean.toObject(json);
                     
                     // Cadastrar usuário
-                    if (mensagem.getTipo() == TipoMensagem.CADASTRAR) {
+                    if (mensagem.getTipo() == TipoMensagem.CADASTRA) {
                         mensagem = cadastraUsuario(mensagem.getPessoa(), mensagem.getUsuario());
                         escrita.write(mensagem.toJson().toString() + "\n");
                         escrita.flush();
@@ -129,6 +129,7 @@ public final class ServidorController {
                     // Atualizar um cadastro    
                     } else if (mensagem.getTipo() == TipoMensagem.ATUALIZA_CADASTRO) {
                         mensagem = atualizaCadastro(mensagem.getUsuario());
+                        System.out.println(mensagem.toJson().toString());
                         escrita.write(mensagem.toJson().toString() + "\n");
                     } else if (mensagem.getTipo() == TipoMensagem.LOGIN) {
                         mensagem = autentica(mensagem.getUsuario());

@@ -29,14 +29,14 @@ public class ThreadTratamento implements Runnable {
     @Override
     public void run() {
         try {
-            while (ServidorController.cliente.isConnected()) {
+            while (ServidorController.cliente.isBound()) {
                 String linha = read.readLine();
                 System.out.println(linha);
                 json.get(linha);
                 ServidorController.enviaMensagem(json);
             }
         } catch (IOException ex) {
-            Logger.getLogger(ThreadTratamento.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("caiu cliente");
         }
     }
 }

@@ -29,7 +29,7 @@ public class ThreadCadastro {
 
     public MensagemBean mensagem = new MensagemBean();
     private PessoaBean retornoP = null;
-    private PessoaBean retornoU = null;
+    private UsuarioBean retornoU = null;
     private PessoaDAO pdao = new PessoaDAO();
     private UsuarioDAO udao = new UsuarioDAO();
 
@@ -37,30 +37,29 @@ public class ThreadCadastro {
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<MensagemBean> futureResult = executor.submit(() -> {
-                
-                
+
                 boolean pessoaExiste = pdao.existe(pessoa);
                 boolean usuarioExiste = udao.existe(usuario);
 
                 if (!pessoaExiste && !usuarioExiste) {
                     retornoP = (PessoaBean) pdao.inserir(pessoa);
                     usuario.setPessoa(retornoP);
-                    retornoU = (PessoaBean) udao.inserir(usuario);
+                    retornoU = (UsuarioBean) udao.inserir(usuario);
                     mensagem.setTipo(TipoMensagem.SUCESSO);
-                    mensagem.setMensagem("Usuário cadastrado com sucesso.");
+                    mensagem.setMensagem("Usuário cadastrado com sucesso");
                     return mensagem;
                 } else {
                     if (pessoaExiste) {
-                        mensagem.setPessoa(null);
-                        mensagem.setUsuario(null);
                         mensagem.setTipo(TipoMensagem.ERRO);
-                        mensagem.setMensagem("Esta pessoa já possui cadastro._");
+                        mensagem.setMensagem("Esta pessoa já possui cadastro_");
                     }
                     if (usuarioExiste) {
-                        mensagem.setPessoa(null);
-                        mensagem.setUsuario(null);
                         mensagem.setTipo(TipoMensagem.ERRO);
-                        mensagem.setMensagem(mensagem.getMensagem() + "Usuário indisponível._");
+                        if (mensagem.getMensagem()== null) {
+                            mensagem.setMensagem("Usuário indisponível_");
+                        } else {
+                            mensagem.setMensagem(mensagem.getMensagem() + "Usuário indisponível_");
+                        }
                     }
                 }
                 return mensagem;

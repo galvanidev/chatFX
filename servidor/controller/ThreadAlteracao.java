@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
 import pessoa.bean.PessoaBean;
@@ -22,8 +24,10 @@ import util.DaoException;
  * @author vlagjuio
  */
 public class ThreadAlteracao {
-    
+
     public MensagemBean mensagem = new MensagemBean();
+    private PessoaBean retornoP = null;
+    private UsuarioBean retornoU = null;
     private PessoaDAO pdao = new PessoaDAO();
     private UsuarioDAO udao = new UsuarioDAO();
 
@@ -31,16 +35,21 @@ public class ThreadAlteracao {
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<MensagemBean> futureResult = executor.submit(() -> {
-                mensagem.setPessoa((PessoaBean) pdao.alterar(pessoa));
-                mensagem.setUsuario((UsuarioBean) udao.alterar(usuario));
+
+                retornoP = (PessoaBean) pdao.alterar(pessoa);
+                retornoU = (UsuarioBean) udao.alterar(usuario);
+                mensagem.setPessoa(retornoP);
+                mensagem.setUsuario(retornoU);
                 mensagem.setTipo(TipoMensagem.SUCESSO);
+                mensagem.setMensagem("Cadastro atualizado");
                 return mensagem;
             });
-            this.mensagem = futureResult.get();
+            mensagem = futureResult.get();
             executor.shutdown();
         } catch (InterruptedException | ExecutionException ex) {
-            mensagem = new MensagemBean(TipoMensagem.ERRO, "Favor tentar novamente mais tarde.");
+            Logger.getLogger(ThreadAlteracao.class.getName()).log(Level.SEVERE, null, ex);
+            mensagem = new MensagemBean(TipoMensagem.ERRO, "Favor tenta novamente mais tarde");
         }
     }
-    
+
 }

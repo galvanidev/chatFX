@@ -53,10 +53,11 @@ public class ConexaoController {
         }
     }
 
-    public static boolean cadastra(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
+    public static void cadastra(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
         try {
             fazConexao();
-            MensagemBean mensagem = new MensagemBean(TipoMensagem.CADASTRAR, usuario, pessoa);
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.CADASTRA, usuario, pessoa);
+            usuario.setSenha(FrameWork.criptografar(usuario.getSenha()));
             JSONObject json = mensagem.toJson();
             escrita.write(json.toString() + "\n");
             escrita.flush();
@@ -64,7 +65,7 @@ public class ConexaoController {
             json = new JSONObject(linha);
             mensagem = MensagemBean.toObject(json);
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
-                return true;
+                throw new CadastroException(mensagem.getMensagem());
             }
             throw new CadastroException(mensagem.getMensagem());
         } catch (IOException ex) {
@@ -72,9 +73,27 @@ public class ConexaoController {
         } finally {
             fechaConexao();
         }
-        return false;
     }
 
+    public static void altera(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
+        try {
+            fazConexao();
+            usuario.setPessoa(pessoa);
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.ATUALIZA_CADASTRO, usuario);
+            JSONObject json = mensagem.toJson();
+            escrita.write(json.toString() + "\n");
+            escrita.flush();
+            String linha = leitura.readLine();
+            json = new JSONObject(linha);
+            mensagem = MensagemBean.toObject(json);
+            throw new CadastroException(mensagem.getMensagem());
+        } catch (IOException ex) {
+            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            fechaConexao();
+        }
+    }
+    
     public static boolean login(String login, String senha) {
         try {
             fazConexao();
@@ -89,8 +108,6 @@ public class ConexaoController {
 
             String linha = leitura.readLine();
             json = new JSONObject(linha);
-            System.out.println(json);
-
             mensagem = MensagemBean.toObject(json);
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 ConexaoController.usuario = mensagem.getUsuario();

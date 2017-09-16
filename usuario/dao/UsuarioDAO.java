@@ -37,7 +37,6 @@ public class UsuarioDAO implements BaseDAO {
             String sql = "INSERT INTO usuario(usuario, email, senha, pessoa_id) VALUES(?, ?, ?, ?)";
             pst = con.prepareStatement(sql);
             UsuarioBean usuario = (UsuarioBean) obj;
-            System.out.println(usuario.getPessoa().getId());
             pst.setString(1, usuario.getLogin());
             pst.setString(2, usuario.getEmail());
             pst.setString(3, usuario.getSenha());
@@ -180,8 +179,9 @@ public class UsuarioDAO implements BaseDAO {
             UsuarioBean usuario = (UsuarioBean) obj;
             pst.setString(1, usuario.getLogin());
             rs = pst.executeQuery();
-            if (rs.next())
+            if (rs.next()) {
                 return true;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

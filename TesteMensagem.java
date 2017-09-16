@@ -1,6 +1,7 @@
 
 import conexao.CadastroException;
 import conexao.ConexaoController;
+import conexao.LoginException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
+import util.FrameWork;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,19 +27,22 @@ public class TesteMensagem {
     public static void main(String[] args) {
         
         UsuarioBean u = new UsuarioBean();
-        u.setLogin("galvani2");
-        u.setEmail("juniior.lima@gmail.com");
-        u.setSenha("123");
+        u.setId(48);
+        u.setLogin("juniiorlima");
+        u.setEmail("galjx@gmail.com");
+        u.setSenha(FrameWork.criptografar("123"));
         
         PessoaBean p = new PessoaBean();
-        p.setNome("galvani");
-        p.setCpf("123");
+        p.setId(113);
+        p.setNome("gal");
+        p.setCpf("000-000-000-00");
         p.setDataNascimento(LocalDate.of(1993, 11, 3));
         p.setSexo("M");
+        
         try {
-            ConexaoController.login("galvani", "123");
-        }catch(CadastroException ex) {
-            System.out.println(Arrays.toString(ex.getMessage().split("_")));
+             ConexaoController.login("juniiorlma", "123");
+        }catch(LoginException ex) {
+            System.out.println(ex.getMessage().toString());
         }
 
         /*
