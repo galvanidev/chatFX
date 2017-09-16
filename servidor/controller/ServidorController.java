@@ -40,9 +40,9 @@ public final class ServidorController {
 
     private static void fechaConexao(Socket socket, BufferedReader in, PrintWriter pw) {
         try {
+            socket.close();
             in.close();
             pw.close();
-            socket.close();
             System.out.println("fechou as conexões");
         } catch (IOException ex) {
             Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);

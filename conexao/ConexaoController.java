@@ -50,9 +50,9 @@ public class ConexaoController {
 
     public static void fechaConexao(Socket servidor, BufferedReader leitura, PrintWriter escrita) {
         try {
+            servidor.close();
             leitura.close();
             escrita.close();
-            servidor.close();
         } catch (IOException ex) {
             Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
         }

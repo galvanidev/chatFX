@@ -45,10 +45,12 @@ public class ThreadTratamento implements Runnable {
                 linha = in.readLine();
                 if (linha.isEmpty()) { continue; };
                 JSONObject json = new JSONObject(linha);
+                System.out.println(linha);                
                 ServidorController.enviaMensagem(json);
             }
-        } catch (IOException | JSONException ex) {
-             System.out.println(Arrays.toString(ex.getStackTrace()));
+        } catch (IOException | NullPointerException ex) {
+            ServidorController.removeCliente(usuario, socket, in, pw);
+            // System.out.println(Arrays.toString(ex.getStackTrace()));
         }
     }
 }
