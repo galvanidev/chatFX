@@ -45,7 +45,7 @@ public class MensagemBean implements Serializable {
             json.put("pessoa", this.pessoa.toJson());
         }
         if (this.hora != null) {
-            json.put("hora", this.hora);
+            json.put("hora", this.hora.toString());
         }
         return json;
     }
@@ -76,7 +76,7 @@ public class MensagemBean implements Serializable {
             m.setPessoa(PessoaBean.toObject(p));
         }
         if (json.has("hora")) {
-            m.setHora((LocalTime) json.get("hora"));
+            m.setHora(LocalTime.parse((CharSequence) json.get("hora")));
         }
         return m;
     }

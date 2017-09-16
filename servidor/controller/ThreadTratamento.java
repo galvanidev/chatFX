@@ -21,6 +21,7 @@ public class ThreadTratamento implements Runnable {
 
     private static BufferedReader read;
     private static JSONObject json;
+    private static String linha;
     
     public ThreadTratamento(BufferedReader cliente) {
         read = cliente;
@@ -29,10 +30,10 @@ public class ThreadTratamento implements Runnable {
     @Override
     public void run() {
         try {
-            while (ServidorController.cliente.isBound()) {
-                String linha = read.readLine();
-                System.out.println(linha);
-                json.get(linha);
+            while (true) {
+                linha = read.readLine();
+                if (linha == null) { continue; };
+                json = new JSONObject(linha);
                 ServidorController.enviaMensagem(json);
             }
         } catch (IOException ex) {

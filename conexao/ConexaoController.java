@@ -105,10 +105,12 @@ public class ConexaoController {
             JSONObject json = mensagem.toJson();
             escrita.write(json.toString() + "\n");
             escrita.flush();
-
+            
             String linha = leitura.readLine();
+            
             json = new JSONObject(linha);
             mensagem = MensagemBean.toObject(json);
+            
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 ConexaoController.usuario = mensagem.getUsuario();
                 iniciaThread();
@@ -128,7 +130,8 @@ public class ConexaoController {
         try {
             MensagemBean m = new MensagemBean(TipoMensagem.LOGOUT);
             if (servidor != null) {
-                escrita.write(m.toJson().toString());
+                escrita.write(m.toJson().toString() + "\n");
+                escrita.flush();
                 fechaConexao();
             }
         } catch (IOException ex) {
@@ -138,16 +141,17 @@ public class ConexaoController {
 
     private static void iniciaThread() {
         // Exibe mensagem de sucesso no terminal
-        System.out.println("Conexão concluída ao servidor " + servidor.getInetAddress());
+        System.out.println("Autenticado no servidor: " + servidor.getInetAddress());
         // Cria uma thread para receber mensagens do servidor
-        // ThreadConexao thread = new ThreadConexao(entrada, usuario);
-        //   new Thread(thread).start();
+        ThreadConexao thread = new ThreadConexao(leitura, usuario);
+        new Thread(thread).start();
     }
 
     public static void enviaMensagem(String texto) throws IOException {
         JSONObject json = new JSONObject();
         MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
-        escrita.write(mensagem.toJson().toString());
+        escrita.write(mensagem.toJson().toString() + "\n");
+        escrita.flush();
     }
 
 }

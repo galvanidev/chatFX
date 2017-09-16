@@ -52,12 +52,12 @@ public final class ServidorController {
     }
 
     public static void enviaMensagem(JSONObject json) {
-        System.out.println(json);
         MensagemBean mensagem = MensagemBean.toObject(json);
-        mensagem.setHora(LocalTime.now());
+        mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
         listaUsuarios.entrySet().forEach((usuario) -> {
             try {
-                escrita.write(mensagem.toJson().toString());
+                escrita.write(mensagem.toJson().toString() + "\n");
+                escrita.flush();
             } catch (IOException ex) {
                 Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -70,7 +70,7 @@ public final class ServidorController {
         MensagemBean m = new MensagemBean();
         m.setTipo(TipoMensagem.ATUALIZA_LISTA);
         m.setUsuarios(usuarios);
-        ServidorController.enviaMensagem(m.toJson());
+        enviaMensagem(m.toJson());
     }
 
     public static void removeCliente(UsuarioBean usuario) {
@@ -107,6 +107,7 @@ public final class ServidorController {
     }
 
     private static void trataCliente() {
+
         thread = new Thread() {
             @Override
             public void run() {
@@ -117,43 +118,50 @@ public final class ServidorController {
                     //  Recebe mensagem do cliente
                     String linha = leitura.readLine();
                     JSONObject json = new JSONObject(linha);
-                    System.out.println(json.toString());
                     MensagemBean mensagem = MensagemBean.toObject(json);
-                    
+
                     // Cadastrar usuário
                     if (mensagem.getTipo() == TipoMensagem.CADASTRA) {
                         mensagem = cadastraUsuario(mensagem.getPessoa(), mensagem.getUsuario());
                         escrita.write(mensagem.toJson().toString() + "\n");
                         escrita.flush();
-                    
-                    // Atualizar um cadastro    
+
+                        // Atualizar um cadastro    
                     } else if (mensagem.getTipo() == TipoMensagem.ATUALIZA_CADASTRO) {
                         mensagem = atualizaCadastro(mensagem.getUsuario());
-                        System.out.println(mensagem.toJson().toString());
                         escrita.write(mensagem.toJson().toString() + "\n");
+                        escrita.flush();
+
                     } else if (mensagem.getTipo() == TipoMensagem.LOGIN) {
                         mensagem = autentica(mensagem.getUsuario());
                         if (mensagem.getTipo() == (TipoMensagem.ERRO)) {
+                            mensagem = new MensagemBean(mensagem.getTipo(), mensagem.getMensagem());
                             escrita.write(mensagem.toJson().toString() + "\n");
+                            escrita.flush();
                         } else {
                             if (listaUsuarios.containsKey(mensagem.getUsuario())) {
-                                mensagem.setMensagem("Usuário já está logado.");
+                                mensagem = new MensagemBean(TipoMensagem.ERRO, "Usuário já está logado");
                                 escrita.write(mensagem.toJson().toString() + "\n");
+                                escrita.flush();
                             } else {
+                                mensagem.setTipo(TipoMensagem.SUCESSO);
                                 escrita.write(mensagem.toJson().toString() + "\n");
                                 adicionarCliente(mensagem.getUsuario(), leitura);
                                 // Cria um Tratador de Clientes em Thread separada
-                                ThreadTratamento tc = new ThreadTratamento(null);
+                                ThreadTratamento tc = new ThreadTratamento(leitura);
                                 new Thread(tc).start();
                             }
                         }
+                    }
+                } catch (IOException ex) {
+                    try {
                         escrita.close();
                         leitura.close();
                         cliente.close();
+                        Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex1) {
+                        Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex1);
                     }
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
-                    Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };

@@ -5,6 +5,8 @@ import conexao.LoginException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
 import org.json.JSONArray;
@@ -25,24 +27,25 @@ import util.FrameWork;
 public class TesteMensagem {
 
     public static void main(String[] args) {
-        
+
         UsuarioBean u = new UsuarioBean();
         u.setId(48);
         u.setLogin("juniiorlima");
         u.setEmail("galjx@gmail.com");
         u.setSenha(FrameWork.criptografar("123"));
-        
+
         PessoaBean p = new PessoaBean();
         p.setId(113);
         p.setNome("gal");
         p.setCpf("000-000-000-00");
         p.setDataNascimento(LocalDate.of(1993, 11, 3));
         p.setSexo("M");
-        
+
         try {
-             ConexaoController.login("juniiorlma", "123");
-        }catch(LoginException ex) {
-            System.out.println(ex.getMessage().toString());
+            ConexaoController.login("juniiorlima", "123");
+        } catch (LoginException ex) {
+            Logger.getLogger(TesteMensagem.class.getName()).log(Level.SEVERE, null, ex);
+
         }
 
         /*
@@ -57,8 +60,5 @@ public class TesteMensagem {
         JSONObject obj = mensagem.toJson();
        
         MensagemBean.toObject(obj);*/
-        
-        
-        
     }
 }

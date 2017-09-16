@@ -24,7 +24,8 @@ public class ThreadConexao implements Runnable {
 
     private static BufferedReader read;
     private static UsuarioBean destinatario;
-
+    private static String linha;
+    private static JSONObject json;
     public ThreadConexao(BufferedReader br, UsuarioBean usuario) {
         read = br;
         destinatario = usuario;
@@ -33,9 +34,11 @@ public class ThreadConexao implements Runnable {
     @Override
     public void run() {
         try {
-            while(read.ready()) {
-                String linha = read.readLine();
-                System.out.println(linha);
+            while(true) {
+                linha = read.readLine();
+                if (linha == null) { continue; }
+                json = new JSONObject(linha);
+                System.out.println(json.toString());
             }
         } catch (IOException ex) {
             Logger.getLogger(ThreadConexao.class.getName()).log(Level.SEVERE, null, ex);
