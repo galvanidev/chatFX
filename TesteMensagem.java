@@ -29,7 +29,26 @@ import util.FrameWork;
 public class TesteMensagem {
 
     public static void main(String[] args) {
-
+        /* is;
+	DataOutputStream os;
+        String string = "{\"id\":1,\"method\":\"object.deleteAll\",\"params\":[\"subscriber\"]}";
+		is = new DataInputStream(socket.getInputStream());
+		os = new DataOutputStream(socket.getOutputStream());
+		PrintWriter pw = new PrintWriter(os);
+		pw.println(string);
+		pw.flush();
+			
+		BufferedReader in = new BufferedReader(new InputStreamReader(is));
+		JSONObject json = new JSONObject(in.readLine());
+        
+        
+        
+        
+        
+        
+        
+        
+        
         UsuarioBean u = new UsuarioBean();
         u.setId(48);
         u.setLogin("juniiorlima");

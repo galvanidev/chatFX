@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -24,15 +26,14 @@ import usuario.bean.UsuarioBean;
 public class ThreadTratamento implements Runnable {
 
     private static Socket socket;
-    private static BufferedReader read;
-    private static OutputStreamWriter writer;
-    private static JSONObject json;
+    private static BufferedReader in;
+    private static PrintWriter pw;
     private static String linha;
     private static UsuarioBean usuario;
 
-    public ThreadTratamento(Socket sock, BufferedReader leitura, OutputStreamWriter escrita, UsuarioBean user) throws IOException {
-        read = leitura;
-        writer = escrita;
+    public ThreadTratamento(Socket sock, BufferedReader leitura, PrintWriter escrita, UsuarioBean user) throws IOException {
+        in = leitura;
+        pw = escrita;
         usuario = user;
         socket = sock;
     }
@@ -40,19 +41,16 @@ public class ThreadTratamento implements Runnable {
     @Override
     public void run() {
         try {
-            while (read.read() != -1) {
-                linha = read.readLine();
-                System.out.println("recebeu");
-                if (linha == null) {
-                    continue;
-                };
-                json = new JSONObject(linha);
-                ServidorController.enviaMensagem(json);
+            while (true) {
+                String linha = in.readLine();
+                if (linha.isEmpty()) { continue; };
+                System.out.println(linha);
+                // ServidorController.enviaMensagem(json);
             }
         } catch (IOException | JSONException ex) {
-            // Exceção quando o cliente manda campos "";
+             System.out.println(Arrays.toString(ex.getStackTrace()));
         } finally {
-            ServidorController.removeCliente(usuario, socket, read, writer);
+            ServidorController.removeCliente(usuario, socket, in, pw);
         }
     }
 }

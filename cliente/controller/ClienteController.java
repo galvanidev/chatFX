@@ -61,7 +61,7 @@ public class ClienteController {
     @FXML
     private void enviarMensagem() {
         ConexaoController.enviaMensagem(tfMensagem.getText());
-        tfMensagem.setText("");
+        tfMensagem.clear();
         tfMensagem.requestFocus();
     }
 

@@ -3,6 +3,7 @@ package conexao;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -25,34 +26,28 @@ import usuario.bean.UsuarioBean;
 public class ThreadConexao implements Runnable {
 
     private static Socket socket;
-    private static BufferedReader read;
-    private static Writer writer;
+    private static BufferedReader in;
+    private static PrintWriter pw;
     private static UsuarioBean destinatario;
     private static String linha;
     private static JSONObject json;
-    public ThreadConexao(Socket s, BufferedReader r, Writer w) {
+
+    public ThreadConexao(Socket s, BufferedReader r, PrintWriter p) {
         socket = s;
-        read = r;
-        writer = w;
+        in = r;
+        pw = p;
     }
-    
+
     @Override
     public void run() {
         try {
-            while((linha = read.readLine()) != null) {
-                linha = read.readLine();
-                if (linha == null) { continue; }
-                json = new JSONObject(linha);
-                System.out.println(json.toString());
+            while (true) {
+                pw.print(in.readLine() + "\n");
+                pw.flush();
             }
         } catch (IOException ex) {
             // Logger.getLogger(ThreadConexao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    private void verifica() {
-        
-    }
-    
+
 }

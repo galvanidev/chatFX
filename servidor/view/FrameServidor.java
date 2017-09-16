@@ -116,7 +116,7 @@ public class FrameServidor extends javax.swing.JFrame {
     }//GEN-LAST:event_jBIniciarActionPerformed
 
     private void jBFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFecharActionPerformed
-        ServidorController.finalizaServico();
+        //ServidorController.finalizaServico();
     }//GEN-LAST:event_jBFecharActionPerformed
 
     /**
