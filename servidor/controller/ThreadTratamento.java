@@ -42,15 +42,13 @@ public class ThreadTratamento implements Runnable {
     public void run() {
         try {
             while (true) {
-                String linha = in.readLine();
+                linha = in.readLine();
                 if (linha.isEmpty()) { continue; };
-                System.out.println(linha);
-                // ServidorController.enviaMensagem(json);
+                JSONObject json = new JSONObject(linha);
+                ServidorController.enviaMensagem(json);
             }
         } catch (IOException | JSONException ex) {
              System.out.println(Arrays.toString(ex.getStackTrace()));
-        } finally {
-            ServidorController.removeCliente(usuario, socket, in, pw);
         }
     }
 }

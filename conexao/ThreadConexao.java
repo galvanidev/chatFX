@@ -42,8 +42,10 @@ public class ThreadConexao implements Runnable {
     public void run() {
         try {
             while (true) {
-                pw.print(in.readLine() + "\n");
-                pw.flush();
+                linha = in.readLine();
+                if(linha.isEmpty()) { continue; };
+                json = new JSONObject(linha);
+                System.out.println(json);
             }
         } catch (IOException ex) {
             // Logger.getLogger(ThreadConexao.class.getName()).log(Level.SEVERE, null, ex);
