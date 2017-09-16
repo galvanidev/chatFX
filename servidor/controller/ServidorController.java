@@ -30,7 +30,7 @@ public final class ServidorController {
 
     public static Socket cliente;
     private static ServerSocket server;
-    private static final HashMap<UsuarioBean, BufferedReader> listaUsuarios = new HashMap<>();
+    private static final HashMap<UsuarioBean, OutputStreamWriter> listaUsuarios = new HashMap<>();
     private static OutputStreamWriter escrita;
     private static BufferedReader leitura;
     private static Thread thread;
@@ -57,16 +57,16 @@ public final class ServidorController {
         mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
         listaUsuarios.entrySet().forEach((usuario) -> {
             try {
-                escrita.write(mensagem.toJson().toString() + "\n");
-                escrita.flush();
+                usuario.getValue().write(mensagem.toJson().toString() + "\n");
+                usuario.getValue().flush();
             } catch (IOException ex) {
                 Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
-    private static void adicionarCliente(UsuarioBean usuario, BufferedReader read) throws IOException {
-        listaUsuarios.put(usuario, read);
+    private static void adicionarCliente(UsuarioBean usuario, OutputStreamWriter writer) throws IOException {
+        listaUsuarios.put(usuario, writer);
         UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
         MensagemBean m = new MensagemBean();
         m.setTipo(TipoMensagem.ATUALIZA_LISTA);
@@ -146,7 +146,7 @@ public final class ServidorController {
                             } else {
                                 mensagem.setTipo(TipoMensagem.SUCESSO);
                                 escrita.write(mensagem.toJson().toString() + "\n");
-                                adicionarCliente(mensagem.getUsuario(), leitura);
+                                adicionarCliente(mensagem.getUsuario(), escrita);
                                 // Cria um Tratador de Clientes em Thread separada
                                 ThreadTratamento tc = new ThreadTratamento(client, leitura, escrita, mensagem.getUsuario());
                                 new Thread(tc).start();

@@ -42,7 +42,7 @@ public class ThreadTratamento implements Runnable {
             while (read.read() != -1) {
                 linha = read.readLine();
                 if (linha == null) { continue; };
-                json = new JSONObject(linha);
+                json = new JSONObject(linha.split(""));
                 ServidorController.enviaMensagem(json);
             }
             System.out.println("caiu");

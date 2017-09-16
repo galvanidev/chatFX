@@ -2,9 +2,11 @@
 import conexao.CadastroException;
 import conexao.ConexaoController;
 import conexao.LoginException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
@@ -43,10 +45,25 @@ public class TesteMensagem {
 
         try {
             ConexaoController.login("juniiorlima", "123");
-        } catch (LoginException ex) {
+            Scanner s = new Scanner(System.in);
+            while(true) {
+                ConexaoController.enviaMensagem(s.nextLine());
+            }
+        } catch (LoginException | IOException ex) {
             Logger.getLogger(TesteMensagem.class.getName()).log(Level.SEVERE, null, ex);
 
         }
+        /*
+        UsuarioBean[] usuarios;
+        usuarios = new UsuarioBean[2];
+        usuarios[0] = new UsuarioBean();
+        usuarios[0].setLogin("teste 1");
+        usuarios[1] = new UsuarioBean();
+        usuarios[1].setLogin("teste 2");
+        MensagemBean mensagem = new MensagemBean();
+        mensagem.setUsuarios(usuarios);
+        JSONObject obj = mensagem.toJson();
+        MensagemBean.toObject(obj);*/ 
 
         /*
         UsuarioBean[] usuarios;

@@ -148,7 +148,6 @@ public class ConexaoController {
     }
 
     public static void enviaMensagem(String texto) throws IOException {
-        JSONObject json = new JSONObject();
         MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
         escrita.write(mensagem.toJson().toString() + "\n");
         escrita.flush();
