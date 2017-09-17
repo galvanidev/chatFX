@@ -40,31 +40,39 @@ public class ThreadConexao implements Runnable {
         try {
             while (true) {
                 linha = in.readLine();
-                if(linha.isEmpty()) { continue; };
+                if (linha.isEmpty()) { continue; };
                 json = new JSONObject(linha);
                 MensagemBean mensagem = MensagemBean.toObject(json);
-                
-                // Recebimento das mensagens
-                if (mensagem.getTipo() == TipoMensagem.MENSAGEM) {
-                    if (mensagem.getUsuario().equals(ConexaoController.getUsuario())) {
-                        MensagemController.setMensagemUsuario(mensagem);
-                    } else {
-                        MensagemController.setMensagemCliente(mensagem);
-                    }
-                // Quando cliente acaba de entrar
-                } else if (mensagem.getTipo() == TipoMensagem.ATUALIZA_LISTA) {
-                    ConexaoController.setUsuario(mensagem.getUsuario());
-                    UsuarioModel.atualizaLista(mensagem.getUsuarios());
-                // Quando um novo cliente acessa o sistema
-                } else if (mensagem.getTipo() == TipoMensagem.LOGIN) {
-                    UsuarioModel.add(mensagem.getUsuario());
-                // Quando um cliente sai do sistema
-                } else if (mensagem.getTipo() == TipoMensagem.LOGOUT) {
-                    UsuarioModel.remove(mensagem.getUsuario());
-                } else {
-                    System.out.println("Alguém atualizou seus dados");
-                }                
-                
+                System.out.println(json);
+
+                switch (mensagem.getTipo()) {
+                    case MENSAGEM:
+                        // Recebimento das mensagens
+                        if (mensagem.getUsuario().equals(ConexaoController.getUsuario())) {
+                            MensagemController.setMensagemUsuario(mensagem);
+                        } else {
+                            MensagemController.setMensagemCliente(mensagem);
+                        }
+                        break;
+                    case ATUALIZA_LISTA:
+                        // Quando cliente acaba de entrar
+                        ConexaoController.setUsuario(mensagem.getUsuario());
+                        UsuarioModel.atualizaLista(mensagem.getUsuarios());
+                        break;
+                    case LOGIN:
+                        // Quando um novo cliente acessa o sistema
+                        UsuarioModel.add(mensagem.getUsuario());
+                        MensagemController.notificaEntrada(mensagem.getUsuario());
+                        break;
+                    // Quando um cliente sai do sistema
+                    case LOGOUT:
+                        MensagemController.notificaSaida(mensagem.getUsuario());
+                        UsuarioModel.remove(mensagem.getUsuario());
+                        break;
+                    case ATUALIZA_CADASTRO:
+                        System.out.println("Alguém atualizou seus dados");
+                        break;
+                }
             }
         } catch (IOException | NullPointerException ex) {
             ConexaoController.fechaConexao(socket, in, pw);

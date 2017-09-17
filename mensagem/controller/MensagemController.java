@@ -15,9 +15,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javax.swing.JOptionPane;
 import mensagem.bean.MensagemBean;
 import mensagem.model.MensagemModel;
 import usuario.bean.UsuarioBean;
+import usuario.model.UsuarioModel;
 
 /**
  *
@@ -28,7 +30,9 @@ public class MensagemController {
     public static void setMensagemCliente(MensagemBean mensagem) {
 
         VBox box = new VBox();
-        Label nome = new Label(mensagem.getUsuario().getLogin());
+        mensagem.setUsuario(UsuarioModel.get(mensagem.getUsuario().getId()));
+        Label nome = new Label(mensagem.getUsuario().getPessoa().getNomeFormatado()
+                + " (" + mensagem.getUsuario().getLogin() + ")");
         Label texto = new Label(mensagem.getMensagem());
         Label hora = new Label(mensagem.getHora().toString());
 
@@ -47,13 +51,14 @@ public class MensagemController {
 
         box.getChildren().addAll(nome, texto, hora);
 
-        MensagemModel.addNode((VBox) box) ;
+        MensagemModel.addNode((VBox) box);
     }
 
     public static void setMensagemUsuario(MensagemBean mensagem) {
-
         VBox box = new VBox();
-        Label nome = new Label(mensagem.getUsuario().getLogin());
+        mensagem.setUsuario(UsuarioModel.get(mensagem.getUsuario().getId()));
+        Label nome = new Label(mensagem.getUsuario().getPessoa().getNomeFormatado()
+                + " (" + mensagem.getUsuario().getLogin() + ")");
         Label texto = new Label(mensagem.getMensagem());
         Label hora = new Label(mensagem.getHora().toString());
 
@@ -70,8 +75,17 @@ public class MensagemController {
         box.setAlignment(Pos.TOP_LEFT);
         box.setMargin(box, new Insets(8, 150, 8, 16));
         box.getChildren().addAll(nome, texto, hora);
-        
+
         MensagemModel.addNode((VBox) box);
-        
+    }
+
+    public static void notificaSaida(UsuarioBean usuario) {
+        usuario = UsuarioModel.get(usuario.getId());
+        System.out.println(usuario.getPessoa().getNomeFormatado() + " saiu");
+    }
+
+    public static void notificaEntrada(UsuarioBean usuario) {
+        usuario = UsuarioModel.get(usuario.getId());
+        System.out.println(usuario.getPessoa().getNomeFormatado() + " entrou");
     }
 }

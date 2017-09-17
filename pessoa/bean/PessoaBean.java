@@ -21,6 +21,11 @@ public class PessoaBean implements Serializable {
     private String cpf;
     private LocalDate dataNascimento;
     private String sexo;
+
+    public PessoaBean(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
     
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -56,6 +61,13 @@ public class PessoaBean implements Serializable {
     
     public PessoaBean() { }
 
+    public PessoaBean(Integer id, String nome, LocalDate dataNascimento, String sexo) { 
+        this.id = id;
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.sexo = sexo;
+    }
+    
     public PessoaBean(JSONObject json) {
         this.id = json.getInt("id");
         this.nome = json.getString("nome");
@@ -76,6 +88,12 @@ public class PessoaBean implements Serializable {
 
     public String getNome() {
         return nome;
+    }
+    
+    public String getNomeFormatado() {
+        String n = this.nome;
+	String[] s = n.trim().split(" ");
+        return s[0] + " " + s[s.length-1];
     }
 
     public void setNome(String nome) {

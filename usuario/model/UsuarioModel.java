@@ -17,6 +17,8 @@ import usuario.bean.UsuarioBean;
  */
 public class UsuarioModel {
 
+    private static UsuarioBean usuarioRetorno;
+
     private static final ObservableList<UsuarioBean> LISTA = FXCollections.observableArrayList();
 
     public static ObservableList<UsuarioBean> getLista() {
@@ -31,7 +33,7 @@ public class UsuarioModel {
             LISTA.add(u);
         });
     }
-    
+
     public static void atualizaLista(UsuarioBean[] usuarios) {
         LISTA.addAll(usuarios);
     }
@@ -40,6 +42,19 @@ public class UsuarioModel {
         Platform.runLater(() -> {
             LISTA.remove(u);
         });
+    }
+
+    public static void clear() {
+        LISTA.clear();
+    }
+
+    public static UsuarioBean get(Integer id) {
+        for (UsuarioBean u : LISTA) {
+            if (u.getId().equals(id)) {
+                usuarioRetorno = u;
+            }
+        }
+        return usuarioRetorno;
     }
 
 }

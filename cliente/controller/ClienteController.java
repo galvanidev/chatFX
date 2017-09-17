@@ -49,6 +49,7 @@ public class ClienteController {
     @FXML
     public void sair() {
         ConexaoController.logout();
+        UsuarioModel.clear();
         new LoginView().start(LoginView.primaryStage);
     }
 

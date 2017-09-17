@@ -49,9 +49,11 @@ public final class ServidorController {
     }
 
     public static void enviaMensagem(MensagemBean mensagem) {
+        UsuarioBean u;
+        PessoaBean p;
+        MensagemBean m;
         mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
         switch (mensagem.getTipo()) {
-
             case LOGIN:
                 // Se for login, envia pra todo mundo menos para o que está entrando
                 listaUsuarios.entrySet().forEach((usuario) -> {
@@ -63,7 +65,7 @@ public final class ServidorController {
                 break;
 
             case LOGOUT:
-                // Se for logout, envia para todos menos para o que está saindo   
+                // Se for logout, envia para todos menos para o que está saindo
                 listaUsuarios.entrySet().forEach((usuario) -> {
                     usuario.getValue().println(mensagem.toJson() + "\n");
                     usuario.getValue().flush();
@@ -72,9 +74,9 @@ public final class ServidorController {
 
             case MENSAGEM:
                 // Se for tipo mensagem, envia pra todo mundo  
-                UsuarioBean u = new UsuarioBean(mensagem.getUsuario().getId(),
+                u = new UsuarioBean(mensagem.getUsuario().getId(),
                         mensagem.getUsuario().getLogin());
-                MensagemBean m = new MensagemBean(mensagem.getTipo(), u,
+                m = new MensagemBean(mensagem.getTipo(), u,
                         mensagem.getMensagem(), mensagem.getHora());
                 listaUsuarios.entrySet().forEach((usuario) -> { 
                     usuario.getValue().println(m.toJson() + "\n");
@@ -83,8 +85,17 @@ public final class ServidorController {
                 break;
             case ATUALIZA_CADASTRO:
                 // Se for tipo atualização, envia pra todo mundo 
+                u = mensagem.getUsuario();
+                p = new PessoaBean(u.getPessoa().getId(), 
+                                u.getPessoa().getNome());
+                u.setPessoa(p);
+                m = mensagem;
+                m.setUsuario(u);
                 listaUsuarios.entrySet().forEach((usuario) -> {
-                    if (usuario != mensagem.getUsuario()) {
+                    if (usuario != m.getUsuario()) {
+                        usuario.getValue().println(m.toJson() + "\n");
+                        usuario.getValue().flush();
+                    } else {
                         usuario.getValue().println(mensagem.toJson() + "\n");
                         usuario.getValue().flush();
                     }
