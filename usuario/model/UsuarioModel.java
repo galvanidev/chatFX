@@ -36,6 +36,7 @@ public class UsuarioModel {
 
     public static void atualizaLista(UsuarioBean[] usuarios) {
         LISTA.addAll(usuarios);
+        System.out.println(LISTA);
     }
 
     public static void remove(UsuarioBean u) {

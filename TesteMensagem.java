@@ -35,27 +35,23 @@ public class TesteMensagem {
         UsuarioBean usuario = new UsuarioBean();
         PessoaBean pessoa = new PessoaBean();
         pessoa.setId(7);
-        pessoa.setCpf("000.000.000-22");
+        pessoa.setCpf("712.091.182-52");
         pessoa.setNome("Galvani Júnior");
+        pessoa.setDataNascimento(LocalDate.of(1993, 11, 3));
         pessoa.setSexo("M");
         usuario.setId(5);
-        usuario.setLogin("gal");
+        usuario.setLogin("gal2");
         usuario.setEmail("juniior.lima@gmail.com");
+        usuario.setSenha("123");
         usuario.setPessoa(pessoa);
         for (int i = 0; i < usuarios.length; i++) {
             usuarios[i] = usuario;
         }
-        mensagem.setUsuarios(usuarios);
-        System.out.println(mensagem.toJson());
-        JSONObject json = mensagem.toJson();
-        mensagem = MensagemBean.toObject(json);
         
-        usuarios = mensagem.getUsuarios();
-        for (int i = 0; i < usuarios.length; i++) {
-            System.out.println(usuarios[i] + "\n");
+        try {
+            ConexaoController.cadastra(usuario, pessoa);
+        } catch(CadastroException ex) {
+            System.out.println(ex);
         }
-        
-        System.out.println(FrameWork.criptografar("123"));
-        
     }
 }
