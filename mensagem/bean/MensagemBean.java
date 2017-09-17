@@ -81,20 +81,16 @@ public class MensagemBean implements Serializable {
         return m;
     }
 
-    private MensagemBean(JSONObject json) {
-        this.tipo = json.getString("tipo");
-        this.mensagem = json.getString("mensagem");
-        this.usuario = (UsuarioBean) json.get("usuario");
-        this.usuarios = (UsuarioBean[]) json.get("usuarios");
-        this.pessoa = (PessoaBean) json.get("pessoa");
-        this.hora = (LocalTime) json.get("hora");
-    }
-
     public MensagemBean() {
     }
 
     public MensagemBean(TipoMensagem tipo) {
         this.tipo = tipo.name();
+    }
+    
+    public MensagemBean(TipoMensagem tipo, UsuarioBean[] usuarios) {
+        this(tipo);
+        this.usuarios = usuarios;
     }
 
     public MensagemBean(TipoMensagem tipo, String mensagem) {

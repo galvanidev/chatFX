@@ -82,7 +82,6 @@ public class ClienteController {
     }
     
     private void iniciaEscutas() {
-        
         // Escuta para os usuários
         UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> {
             while (change.next()) {

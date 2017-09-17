@@ -47,8 +47,8 @@ public class ThreadConexao implements Runnable {
                 json = new JSONObject(linha);
                 System.out.println(json);
             }
-        } catch (IOException ex) {
-            // Logger.getLogger(ThreadConexao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | NullPointerException ex) {
+            ConexaoController.fechaConexao(socket, in, pw);
         }
     }
 

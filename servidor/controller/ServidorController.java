@@ -43,28 +43,66 @@ public final class ServidorController {
             socket.close();
             in.close();
             pw.close();
-            System.out.println("fechou as conexões");
         } catch (IOException ex) {
             Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void enviaMensagem(JSONObject json) {
-        MensagemBean mensagem = MensagemBean.toObject(json);
+    public static void enviaMensagem(MensagemBean mensagem) {
         mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
-        listaUsuarios.entrySet().forEach((usuario) -> {
-            usuario.getValue().print(mensagem.toJson() + "\n");
-            usuario.getValue().flush();
-        });
+
+        switch (mensagem.getTipo()) {
+            case LOGIN:
+                // Se for login, envia pra todo mundo menos para o que está entrando
+                listaUsuarios.entrySet().forEach((usuario) -> {
+                    if (usuario != mensagem.getUsuario()) {
+                        usuario.getValue().println(mensagem.toJson() + "\n");
+                        usuario.getValue().flush();
+                    }
+                });
+                break;
+
+            case LOGOUT:
+                // Se for logout, envia para todos menos para o que está saindo   
+                listaUsuarios.entrySet().forEach((usuario) -> {
+                    if (usuario != mensagem.getUsuario()) {
+                        usuario.getValue().println(mensagem.toJson() + "\n");
+                        usuario.getValue().flush();
+                    }
+                });
+                break;
+
+            case MENSAGEM:
+                // Se for tipo mensagem, envia pra todo mundo    
+                listaUsuarios.entrySet().forEach((usuario) -> {
+                    if (usuario != mensagem.getUsuario()) {
+                        usuario.getValue().println(mensagem.toJson() + "\n");
+                        usuario.getValue().flush();
+                    }
+                });
+                break;
+            case ATUALIZA_CADASTRO:
+                // Se for tipo atualização, envia pra todo mundo 
+                listaUsuarios.entrySet().forEach((usuario) -> {
+                    if (usuario != mensagem.getUsuario()) {
+                        usuario.getValue().println(mensagem.toJson() + "\n");
+                        usuario.getValue().flush();
+                    }
+                });
+                break;
+        }
     }
 
-    private static void adicionarCliente(UsuarioBean usuario, PrintWriter pw, BufferedReader in) throws IOException {
-        listaUsuarios.put(usuario, pw);
-        /*UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
-        MensagemBean m = new MensagemBean();
-        m.setTipo(TipoMensagem.LOGIN);
-        m.setUsuarios(usuarios);
-        enviaMensagem(m.toJson());*/
+    private static void adicionarCliente(MensagemBean mensagem, PrintWriter pw, BufferedReader in) throws IOException {
+        listaUsuarios.put(mensagem.getUsuario(), pw);
+        UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
+        System.out.println(mensagem.toJson());
+        mensagem = new MensagemBean(TipoMensagem.LOGIN, usuarios);
+        mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
+        System.out.println(mensagem.toJson());
+        pw.println(mensagem.toJson() + "\n");
+        pw.flush();
+        enviaMensagem(mensagem);
     }
 
     public static void removeCliente(UsuarioBean usuario, Socket socket, BufferedReader in, PrintWriter pw) {
@@ -100,65 +138,63 @@ public final class ServidorController {
     }
 
     private static void trataCliente() {
-        Socket client = cliente;
         thread = new Thread() {
             @Override
             public void run() {
                 try {
+                    Socket client = cliente;
                     // Pega referência das io do socket
-
                     is = new DataInputStream(client.getInputStream());
                     os = new DataOutputStream(client.getOutputStream());
 
                     PrintWriter pw = new PrintWriter(os);
                     BufferedReader in = new BufferedReader(new InputStreamReader(is));
 
-                    //  Recebe mensagem do cliente
+                    //  Recebe requisição do cliente
                     JSONObject json = new JSONObject(in.readLine());
                     MensagemBean mensagem = MensagemBean.toObject(json);
-
-                    // Cadastrar usuário
-                    if (mensagem.getTipo() == TipoMensagem.CADASTRA) {
-                        mensagem = cadastraUsuario(mensagem.getPessoa(), mensagem.getUsuario());
-                        pw.println(mensagem.toJson() + "\n");
-                        pw.flush();
-
-                        // Atualizar um cadastro    
-                    } else if (mensagem.getTipo() == TipoMensagem.ATUALIZA_CADASTRO) {
-                        mensagem = atualizaCadastro(mensagem.getUsuario());
-                        pw.println(mensagem.toJson() + "\n");
-                        pw.flush();
-
-                    } else if (mensagem.getTipo() == TipoMensagem.LOGIN) {
-                        mensagem = autentica(mensagem.getUsuario());
-                        if (mensagem.getTipo() == (TipoMensagem.ERRO)) {
-                            mensagem = new MensagemBean(mensagem.getTipo(), mensagem.getMensagem());
-                            pw.println(mensagem.toJson() + "\n");
+                    MensagemBean resposta;
+                    
+                    switch (mensagem.getTipo()) {
+                        // Cadastra novo usuário
+                        case CADASTRA:
+                            resposta = cadastraUsuario(mensagem.getPessoa(), mensagem.getUsuario());
+                            pw.println(resposta.toJson() + "\n");
                             pw.flush();
-                        } else {
-                            if (listaUsuarios.containsKey(mensagem.getUsuario())) {
-                                mensagem = new MensagemBean(TipoMensagem.ERRO, "Usuário já está logado");
-                                pw.println(mensagem.toJson() + "\n");
+                            break;
+                        // Atualiza seu cadastro
+                        case ATUALIZA_CADASTRO:
+                            resposta = atualizaCadastro(mensagem.getUsuario());
+                            pw.println(resposta.toJson() + "\n");
+                            pw.flush();
+                            break;
+                        case LOGIN:
+                            // Tenta autenticar
+                            resposta = autentica(mensagem.getUsuario());
+                            if (resposta.getTipo() == (TipoMensagem.ERRO)) {
+                                resposta = new MensagemBean(resposta.getTipo(), resposta.getMensagem());
+                                pw.println(resposta.toJson() + "\n");
                                 pw.flush();
                             } else {
-                                adicionarCliente(mensagem.getUsuario(), pw, in);
-                                
-                                // Cria um Tratador de Clientes em Thread separada
-                                ThreadTratamento tc = new ThreadTratamento(client, in, pw, mensagem.getUsuario());
-                                new Thread(tc).start();
-                                mensagem.setTipo(TipoMensagem.SUCESSO);
-                                pw.println(mensagem.toJson() + "\n");
-                                pw.flush();
+                                // Verifica se já está logado
+                                if (listaUsuarios.containsKey(resposta.getUsuario())) {
+                                    pw.println(new MensagemBean(TipoMensagem.ERRO, "Usuário já está logado").toJson() + "\n");
+                                    pw.println(resposta.toJson() + "\n");
+                                    pw.flush();
+                                } else {
+                                    // Cliente pode acessar, cria uma nova thread para tratar as mensagens
+                                    ThreadTratamento tc = new ThreadTratamento(client, in, pw, resposta.getUsuario());
+                                    new Thread(tc).start();
+                                    pw.println(new MensagemBean(TipoMensagem.SUCESSO).toJson() + "\n");
+                                    pw.flush();
+                                    resposta = new MensagemBean(TipoMensagem.LOGIN, resposta.getUsuario());
+                                    adicionarCliente(resposta, pw, in);
+                                }
                             }
-                        }
+                            break;
                     }
                 } catch (IOException ex) {
-                    try {
-                        cliente.close();
-                        Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex1) {
-                        Logger.getLogger(ServidorController.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
+                    System.out.println(ex.getStackTrace());
                 }
             }
         };

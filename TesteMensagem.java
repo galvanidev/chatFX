@@ -29,72 +29,31 @@ import util.FrameWork;
 public class TesteMensagem {
 
     public static void main(String[] args) {
-        /* is;
-	DataOutputStream os;
-        String string = "{\"id\":1,\"method\":\"object.deleteAll\",\"params\":[\"subscriber\"]}";
-		is = new DataInputStream(socket.getInputStream());
-		os = new DataOutputStream(socket.getOutputStream());
-		PrintWriter pw = new PrintWriter(os);
-		pw.println(string);
-		pw.flush();
-			
-		BufferedReader in = new BufferedReader(new InputStreamReader(is));
-		JSONObject json = new JSONObject(in.readLine());
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        UsuarioBean u = new UsuarioBean();
-        u.setId(48);
-        u.setLogin("juniiorlima");
-        u.setEmail("galjx@gmail.com");
-        u.setSenha(FrameWork.criptografar("123"));
-
-        PessoaBean p = new PessoaBean();
-        p.setId(113);
-        p.setNome("gal");
-        p.setCpf("000-000-000-00");
-        p.setDataNascimento(LocalDate.of(1993, 11, 3));
-        p.setSexo("M");
-        /*
-        try {
-            ConexaoController.login("gal2", "123");
-            Scanner s = new Scanner(System.in);
-            while(true) {
-                ConexaoController.enviaMensagem(s.nextLine());
-            }
-        } catch (LoginException | IOException ex) {
-            Logger.getLogger(TesteMensagem.class.getName()).log(Level.SEVERE, null, ex);
-
+        MensagemBean mensagem = new MensagemBean();
+        UsuarioBean usuarios[];
+        usuarios = new UsuarioBean[5];
+        UsuarioBean usuario = new UsuarioBean();
+        PessoaBean pessoa = new PessoaBean();
+        pessoa.setId(7);
+        pessoa.setCpf("000.000.000-22");
+        pessoa.setNome("Galvani Júnior");
+        pessoa.setSexo("M");
+        usuario.setId(5);
+        usuario.setLogin("gal");
+        usuario.setEmail("juniior.lima@gmail.com");
+        usuario.setPessoa(pessoa);
+        for (int i = 0; i < usuarios.length; i++) {
+            usuarios[i] = usuario;
         }
-        /*
-        UsuarioBean[] usuarios;
-        usuarios = new UsuarioBean[2];
-        usuarios[0] = new UsuarioBean();
-        usuarios[0].setLogin("teste 1");
-        usuarios[1] = new UsuarioBean();
-        usuarios[1].setLogin("teste 2");
-        MensagemBean mensagem = new MensagemBean();
         mensagem.setUsuarios(usuarios);
-        JSONObject obj = mensagem.toJson();
-        MensagemBean.toObject(obj);*/ 
-
-        /*
-        UsuarioBean[] usuarios;
-        usuarios = new UsuarioBean[2];
-        usuarios[0] = new UsuarioBean();
-        usuarios[0].setLogin("teste 1");
-        usuarios[1] = new UsuarioBean();
-        usuarios[1].setLogin("teste 2");
-        MensagemBean mensagem = new MensagemBean();
-        mensagem.setUsuarios(usuarios);
-        JSONObject obj = mensagem.toJson();
-       
-        MensagemBean.toObject(obj);*/
+        System.out.println(mensagem.toJson());
+        JSONObject json = mensagem.toJson();
+        mensagem = MensagemBean.toObject(json);
+        
+        usuarios = mensagem.getUsuarios();
+        for (int i = 0; i < usuarios.length; i++) {
+            System.out.println(usuarios[i] + "\n");
+        }
+        
     }
 }

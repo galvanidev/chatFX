@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mensagem.bean.MensagemBean;
+import mensagem.bean.TipoMensagem;
 import org.json.JSONException;
 import org.json.JSONObject;
 import usuario.bean.UsuarioBean;
@@ -30,6 +32,7 @@ public class ThreadTratamento implements Runnable {
     private static PrintWriter pw;
     private static String linha;
     private static UsuarioBean usuario;
+    private static JSONObject json;
 
     public ThreadTratamento(Socket sock, BufferedReader leitura, PrintWriter escrita, UsuarioBean user) throws IOException {
         in = leitura;
@@ -43,14 +46,13 @@ public class ThreadTratamento implements Runnable {
         try {
             while (true) {
                 linha = in.readLine();
-                if (linha.isEmpty()) { continue; };
-                JSONObject json = new JSONObject(linha);
-                System.out.println(linha);                
-                ServidorController.enviaMensagem(json);
+                if (linha.isEmpty()) { continue; };              
+                MensagemBean mensagem = MensagemBean.toObject(new JSONObject(linha));
+                ServidorController.enviaMensagem(mensagem);
             }
         } catch (IOException | NullPointerException ex) {
             ServidorController.removeCliente(usuario, socket, in, pw);
-            // System.out.println(Arrays.toString(ex.getStackTrace()));
+            System.out.println(Arrays.toString(ex.getStackTrace()));
         }
     }
 }
