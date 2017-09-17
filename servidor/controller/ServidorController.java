@@ -50,12 +50,12 @@ public final class ServidorController {
 
     public static void enviaMensagem(MensagemBean mensagem) {
         mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
-
         switch (mensagem.getTipo()) {
+
             case LOGIN:
                 // Se for login, envia pra todo mundo menos para o que está entrando
                 listaUsuarios.entrySet().forEach((usuario) -> {
-                    if (usuario != mensagem.getUsuario()) {
+                    if (!mensagem.getUsuario().equals(usuario.getKey())) {
                         usuario.getValue().println(mensagem.toJson() + "\n");
                         usuario.getValue().flush();
                     }
@@ -65,20 +65,20 @@ public final class ServidorController {
             case LOGOUT:
                 // Se for logout, envia para todos menos para o que está saindo   
                 listaUsuarios.entrySet().forEach((usuario) -> {
-                    if (usuario != mensagem.getUsuario()) {
-                        usuario.getValue().println(mensagem.toJson() + "\n");
-                        usuario.getValue().flush();
-                    }
+                    usuario.getValue().println(mensagem.toJson() + "\n");
+                    usuario.getValue().flush();
                 });
                 break;
 
             case MENSAGEM:
-                // Se for tipo mensagem, envia pra todo mundo    
-                listaUsuarios.entrySet().forEach((usuario) -> {
-                    if (usuario != mensagem.getUsuario()) {
-                        usuario.getValue().println(mensagem.toJson() + "\n");
-                        usuario.getValue().flush();
-                    }
+                // Se for tipo mensagem, envia pra todo mundo  
+                UsuarioBean u = new UsuarioBean(mensagem.getUsuario().getId(),
+                        mensagem.getUsuario().getLogin());
+                MensagemBean m = new MensagemBean(mensagem.getTipo(), u,
+                        mensagem.getMensagem(), mensagem.getHora());
+                listaUsuarios.entrySet().forEach((usuario) -> { 
+                    usuario.getValue().println(m.toJson() + "\n");
+                    usuario.getValue().flush();
                 });
                 break;
             case ATUALIZA_CADASTRO:
@@ -96,18 +96,20 @@ public final class ServidorController {
     private static void adicionarCliente(MensagemBean mensagem, PrintWriter pw, BufferedReader in) throws IOException {
         listaUsuarios.put(mensagem.getUsuario(), pw);
         UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
-        System.out.println(mensagem.toJson());
-        mensagem = new MensagemBean(TipoMensagem.LOGIN, usuarios);
-        mensagem.setHora(LocalTime.parse(LocalTime.now().toString()));
-        System.out.println(mensagem.toJson());
-        pw.println(mensagem.toJson() + "\n");
+        MensagemBean mensagemUsuario = new MensagemBean(TipoMensagem.ATUALIZA_LISTA, mensagem.getUsuario(), usuarios);
+        mensagemUsuario.setHora(LocalTime.parse(LocalTime.now().toString()));
+        pw.println(mensagemUsuario.toJson() + "\n");
         pw.flush();
-        enviaMensagem(mensagem);
+        MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, mensagem.getUsuario());
+        enviaMensagem(mensagemTodos);
     }
 
-    public static void removeCliente(UsuarioBean usuario, Socket socket, BufferedReader in, PrintWriter pw) {
-        listaUsuarios.remove(usuario);
+    public static void removeCliente(UsuarioBean u, BufferedReader in, PrintWriter pw, Socket socket) {
+        // Retorna um array das keys e busca pelo dono do printwriter para poder fechar corretamente
+        listaUsuarios.remove(u);
         fechaConexao(socket, in, pw);
+        enviaMensagem(new MensagemBean(TipoMensagem.LOGOUT, new UsuarioBean(u.getId(), u.getLogin())));
+
     }
 
     private static MensagemBean autentica(UsuarioBean u) {
@@ -154,7 +156,7 @@ public final class ServidorController {
                     JSONObject json = new JSONObject(in.readLine());
                     MensagemBean mensagem = MensagemBean.toObject(json);
                     MensagemBean resposta;
-                    
+
                     switch (mensagem.getTipo()) {
                         // Cadastra novo usuário
                         case CADASTRA:
@@ -185,7 +187,7 @@ public final class ServidorController {
                                     // Cliente pode acessar, cria uma nova thread para tratar as mensagens
                                     ThreadTratamento tc = new ThreadTratamento(client, in, pw, resposta.getUsuario());
                                     new Thread(tc).start();
-                                    pw.println(new MensagemBean(TipoMensagem.SUCESSO).toJson() + "\n");
+                                    pw.println(new MensagemBean(TipoMensagem.SUCESSO, resposta.getUsuario()).toJson() + "\n");
                                     pw.flush();
                                     resposta = new MensagemBean(TipoMensagem.LOGIN, resposta.getUsuario());
                                     adicionarCliente(resposta, pw, in);

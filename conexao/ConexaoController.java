@@ -114,7 +114,7 @@ public class ConexaoController {
             mensagem = MensagemBean.toObject(json);
 
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
-                ConexaoController.usuario = mensagem.getUsuario();
+                usuario = mensagem.getUsuario();
                 iniciaThread();
                 return true;
             } else {
@@ -139,11 +139,19 @@ public class ConexaoController {
         ThreadConexao thread = new ThreadConexao(servidor, in, pw);
         new Thread(thread).start();
     }
+    
+    public static void setUsuario(UsuarioBean u) {
+            usuario = u;
+    }
 
     public static void enviaMensagem(String texto) {
         MensagemBean mensagem = new MensagemBean(TipoMensagem.MENSAGEM, usuario, texto);
         pw.print(mensagem.toJson() + "\n");
         pw.flush();
+    }
+
+    public static UsuarioBean getUsuario() {
+        return usuario;
     }
 
 }

@@ -34,7 +34,7 @@ public class UsuarioDAO implements BaseDAO {
     public Object inserir(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "INSERT INTO usuario(usuario, email, senha, pessoa_id) VALUES(?, ?, ?, ?)";
+            String sql = "INSERT INTO usuario(login, email, senha, pessoa_id) VALUES(?, ?, ?, ?)";
             pst = con.prepareStatement(sql);
             UsuarioBean usuario = (UsuarioBean) obj;
             pst.setString(1, usuario.getLogin());
@@ -103,7 +103,7 @@ public class UsuarioDAO implements BaseDAO {
             while (rs.next()) {
                 usuario = new UsuarioBean();
                 usuario.setId(rs.getInt(1));
-                usuario.setLogin(rs.getString("usuario"));
+                usuario.setLogin(rs.getString("login"));
                 usuario.setEmail(rs.getString("email"));
                 usuarios.add(usuario);
             }
@@ -125,7 +125,7 @@ public class UsuarioDAO implements BaseDAO {
             if (rs.next()) {
                 UsuarioBean usuario = new UsuarioBean();
                 usuario.setId(rs.getInt(1));
-                usuario.setLogin(rs.getString("usuario"));
+                usuario.setLogin(rs.getString("login"));
                 usuario.setEmail(rs.getString("email"));
                 Integer idPessoa = (rs.getInt("pessoa_id"));
                 PessoaDAO pdao = new PessoaDAO();
@@ -145,7 +145,7 @@ public class UsuarioDAO implements BaseDAO {
     public UsuarioBean logar(String usuario, String senha) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "SELECT * FROM usuario WHERE usuario = ?";
+            String sql = "SELECT * FROM usuario WHERE login = ?";
             pst = con.prepareStatement(sql);
             pst.setString(1, usuario);
             rs = pst.executeQuery();
@@ -153,7 +153,7 @@ public class UsuarioDAO implements BaseDAO {
                 if (senha.equals(rs.getString(4))) {
                     UsuarioBean u = new UsuarioBean();
                     u.setId(rs.getInt("id"));
-                    u.setLogin(rs.getString("usuario"));
+                    u.setLogin(rs.getString("login"));
                     u.setEmail(rs.getString("email"));
                     int idPessoa = rs.getInt("pessoa_id");
                     PessoaDAO pdao = new PessoaDAO();
@@ -174,7 +174,7 @@ public class UsuarioDAO implements BaseDAO {
     public boolean existe(Object obj) {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "SELECT id FROM usuario WHERE usuario like ?";
+            String sql = "SELECT id FROM usuario WHERE login like ?";
             pst = con.prepareStatement(sql);
             UsuarioBean usuario = (UsuarioBean) obj;
             pst.setString(1, usuario.getLogin());

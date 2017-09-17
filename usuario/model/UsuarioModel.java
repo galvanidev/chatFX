@@ -5,6 +5,7 @@
  */
 package usuario.model;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -23,14 +24,22 @@ public class UsuarioModel {
     }
 
     public static void add(UsuarioBean u) {
-        if (LISTA.contains(u)) {
-            LISTA.remove(u);
-        }
-        LISTA.add(u);
+        Platform.runLater(() -> {
+            if (LISTA.contains(u)) {
+                LISTA.remove(u);
+            }
+            LISTA.add(u);
+        });
+    }
+    
+    public static void atualizaLista(UsuarioBean[] usuarios) {
+        LISTA.addAll(usuarios);
     }
 
     public static void remove(UsuarioBean u) {
-        LISTA.remove(u);
+        Platform.runLater(() -> {
+            LISTA.remove(u);
+        });
     }
 
 }

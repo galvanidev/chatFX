@@ -103,6 +103,11 @@ public class MensagemBean implements Serializable {
         this.usuario = usuario;
     }
 
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, UsuarioBean[] usuarios) {
+        this(tipo, usuario);
+        this.usuarios = usuarios;
+    }
+    
     public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, PessoaBean pessoa) {
         this(tipo, usuario);
         this.pessoa = pessoa;
@@ -113,6 +118,11 @@ public class MensagemBean implements Serializable {
         this.usuario = usuario;
     }
 
+    public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, String mensagem, LocalTime hora) {
+        this(tipo, usuario, mensagem);
+        this.hora = hora;
+    }
+    
     public MensagemBean(TipoMensagem tipo, UsuarioBean usuario, PessoaBean pessoa, String mensagem) {
         this(tipo, usuario, mensagem);
         this.pessoa = pessoa;

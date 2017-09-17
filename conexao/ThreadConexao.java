@@ -2,17 +2,15 @@ package conexao;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
 import mensagem.bean.MensagemBean;
+import mensagem.bean.TipoMensagem;
+import mensagem.controller.MensagemController;
+import mensagem.model.MensagemModel;
 import org.json.JSONObject;
 import usuario.bean.UsuarioBean;
+import usuario.model.UsuarioModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,12 +23,11 @@ import usuario.bean.UsuarioBean;
  */
 public class ThreadConexao implements Runnable {
 
-    private static Socket socket;
-    private static BufferedReader in;
-    private static PrintWriter pw;
-    private static UsuarioBean destinatario;
-    private static String linha;
-    private static JSONObject json;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter pw;
+    private String linha;
+    private JSONObject json;
 
     public ThreadConexao(Socket s, BufferedReader r, PrintWriter p) {
         socket = s;
@@ -45,7 +42,29 @@ public class ThreadConexao implements Runnable {
                 linha = in.readLine();
                 if(linha.isEmpty()) { continue; };
                 json = new JSONObject(linha);
-                System.out.println(json);
+                MensagemBean mensagem = MensagemBean.toObject(json);
+                
+                // Recebimento das mensagens
+                if (mensagem.getTipo() == TipoMensagem.MENSAGEM) {
+                    if (mensagem.getUsuario().equals(ConexaoController.getUsuario())) {
+                        MensagemController.setMensagemUsuario(mensagem);
+                    } else {
+                        MensagemController.setMensagemCliente(mensagem);
+                    }
+                // Quando cliente acaba de entrar
+                } else if (mensagem.getTipo() == TipoMensagem.ATUALIZA_LISTA) {
+                    ConexaoController.setUsuario(mensagem.getUsuario());
+                    UsuarioModel.atualizaLista(mensagem.getUsuarios());
+                // Quando um novo cliente acessa o sistema
+                } else if (mensagem.getTipo() == TipoMensagem.LOGIN) {
+                    UsuarioModel.add(mensagem.getUsuario());
+                // Quando um cliente sai do sistema
+                } else if (mensagem.getTipo() == TipoMensagem.LOGOUT) {
+                    UsuarioModel.remove(mensagem.getUsuario());
+                } else {
+                    System.out.println("Alguém atualizou seus dados");
+                }                
+                
             }
         } catch (IOException | NullPointerException ex) {
             ConexaoController.fechaConexao(socket, in, pw);

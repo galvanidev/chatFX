@@ -5,6 +5,9 @@
  */
 package mensagem.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
@@ -12,6 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import mensagem.bean.MensagemBean;
+import mensagem.model.MensagemModel;
 import usuario.bean.UsuarioBean;
 
 /**
@@ -20,12 +25,12 @@ import usuario.bean.UsuarioBean;
  */
 public class MensagemController {
 
-    public static Node getMensagemCliente(String mensagem, String horario, UsuarioBean usuario) {
+    public static void setMensagemCliente(MensagemBean mensagem) {
 
         VBox box = new VBox();
-        Label nome = new Label(usuario.getLogin());
-        Label texto = new Label(mensagem);
-        Label hora = new Label(horario);
+        Label nome = new Label(mensagem.getUsuario().getLogin());
+        Label texto = new Label(mensagem.getMensagem());
+        Label hora = new Label(mensagem.getHora().toString());
 
         nome.getStyleClass().add("nomeUsuarioMensagem");
 
@@ -42,15 +47,15 @@ public class MensagemController {
 
         box.getChildren().addAll(nome, texto, hora);
 
-        return (VBox) box;
+        MensagemModel.addNode((VBox) box) ;
     }
 
-    public static Node getMensagemUsuario(String mensagem, String horario, UsuarioBean usuario) {
+    public static void setMensagemUsuario(MensagemBean mensagem) {
 
         VBox box = new VBox();
-        Label nome = new Label(usuario.getLogin());
-        Label texto = new Label(mensagem);
-        Label hora = new Label(horario);
+        Label nome = new Label(mensagem.getUsuario().getLogin());
+        Label texto = new Label(mensagem.getMensagem());
+        Label hora = new Label(mensagem.getHora().toString());
 
         nome.getStyleClass().add("nomeUsuarioMensagem");
 
@@ -65,7 +70,8 @@ public class MensagemController {
         box.setAlignment(Pos.TOP_LEFT);
         box.setMargin(box, new Insets(8, 150, 8, 16));
         box.getChildren().addAll(nome, texto, hora);
-
-        return (VBox) box;
+        
+        MensagemModel.addNode((VBox) box);
+        
     }
 }

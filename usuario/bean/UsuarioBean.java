@@ -68,12 +68,17 @@ public class UsuarioBean implements Serializable {
         UsuarioBean[] us = null;
         for (int i = 0; i < json.length(); i++) {
             JSONObject j = json.getJSONObject(i);
-            us[i] = (UsuarioBean) j.get("usuario");
+            us[i] = (UsuarioBean) j.get("login");
         }
         return us;
     }
 
     public UsuarioBean() {
+    }
+    
+    public UsuarioBean(Integer id, String login) {
+        this.id = id;
+        this.login = login;
     }
     
     public UsuarioBean(UsuarioBean trataUsuario) {
@@ -139,8 +144,9 @@ public class UsuarioBean implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + Objects.hashCode(this.login);
+        int hash = 3;
+        hash = 53 * hash + Objects.hashCode(this.id);
+        hash = 53 * hash + Objects.hashCode(this.login);
         return hash;
     }
 
@@ -156,12 +162,21 @@ public class UsuarioBean implements Serializable {
             return false;
         }
         final UsuarioBean other = (UsuarioBean) obj;
-        return Objects.equals(this.login, other.login);
+        if (!Objects.equals(this.login, other.login)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
+
+
+    
 
     @Override
     public String toString() {
-        return this.login;
+        return this.id + " - " + this.login;
     }
 
     /**

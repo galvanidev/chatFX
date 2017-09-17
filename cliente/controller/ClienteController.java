@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
@@ -68,10 +69,10 @@ public class ClienteController {
     @FXML
     public void selecionaItem(MouseEvent ev) {
         if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
-            
+
         }
     }
-        
+
     public void recebeMensagens(List<? extends Node> nos) {
         campoMensagens.getChildren().addAll(nos);
         scrollMensagens.vvalueProperty().bind(campoMensagens.heightProperty());
@@ -80,8 +81,9 @@ public class ClienteController {
     public void atualizaListaUsuarios() {
         listaUsuarios.setItems(UsuarioModel.getLista());
     }
-    
+
     private void iniciaEscutas() {
+
         // Escuta para os usuários
         UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> {
             while (change.next()) {
@@ -90,7 +92,7 @@ public class ClienteController {
         });
 
         // Escuta para as mensagens
-        MensagemModel.getLista().addListener((ListChangeListener.Change<? extends Node> change) -> {
+        MensagemModel.getLISTA().addListener((ListChangeListener.Change<? extends Node> change) -> {
             while (change.next()) {
                 if (change.wasAdded()) {
                     recebeMensagens(change.getAddedSubList());

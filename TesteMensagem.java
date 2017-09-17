@@ -55,5 +55,7 @@ public class TesteMensagem {
             System.out.println(usuarios[i] + "\n");
         }
         
+        System.out.println(FrameWork.criptografar("123"));
+        
     }
 }

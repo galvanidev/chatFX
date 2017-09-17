@@ -27,32 +27,33 @@ import usuario.bean.UsuarioBean;
  */
 public class ThreadTratamento implements Runnable {
 
-    private static Socket socket;
-    private static BufferedReader in;
-    private static PrintWriter pw;
-    private static String linha;
-    private static UsuarioBean usuario;
-    private static JSONObject json;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter pw;
+    private String linha;
+    private UsuarioBean usuario;
+    private JSONObject json;
 
-    public ThreadTratamento(Socket sock, BufferedReader leitura, PrintWriter escrita, UsuarioBean user) throws IOException {
-        in = leitura;
-        pw = escrita;
-        usuario = user;
-        socket = sock;
+    public ThreadTratamento(Socket socket, BufferedReader in, PrintWriter pw, UsuarioBean usuario) throws IOException {
+        this.socket = socket;
+        this.in = in;
+        this.pw = pw;
+        this.usuario = usuario;
     }
 
     @Override
     public void run() {
         try {
             while (true) {
+                // Faz a leitura de qualquer mensagem
                 linha = in.readLine();
-                if (linha.isEmpty()) { continue; };              
+                if (linha.isEmpty()) {continue;};
                 MensagemBean mensagem = MensagemBean.toObject(new JSONObject(linha));
                 ServidorController.enviaMensagem(mensagem);
             }
         } catch (IOException | NullPointerException ex) {
-            ServidorController.removeCliente(usuario, socket, in, pw);
-            System.out.println(Arrays.toString(ex.getStackTrace()));
+            ServidorController.removeCliente(usuario, in, pw, socket);
+            Logger.getLogger(ThreadTratamento.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

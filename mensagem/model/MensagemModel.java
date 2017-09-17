@@ -5,9 +5,11 @@
  */
 package mensagem.model;
 
+import javafx.application.Platform;
 import mensagem.controller.MensagemController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import usuario.bean.UsuarioBean;
 
@@ -17,32 +19,36 @@ import usuario.bean.UsuarioBean;
  */
 public class MensagemModel {
 
-    private static ObservableList<Node> lista = FXCollections.observableArrayList();
+    private static final ObservableList<Node> LISTA = FXCollections.observableArrayList();
 
-    public static ObservableList<Node> getLista() {
-        return lista;
+    public static ObservableList<Node> getLISTA() {
+        return LISTA;
     }
 
-    public static void addMensagem(String mensagem, String horario, UsuarioBean remetente, UsuarioBean destinatario) {
-        if (remetente.getLogin().equals(destinatario.getLogin())) {
-            lista.add(MensagemController.getMensagemUsuario(mensagem, horario, destinatario));
-        } else {
-            lista.add(MensagemController.getMensagemCliente(mensagem, horario, remetente));
-        }
+    public static void addNode(Node no) {
+        Platform.runLater(() -> {
+            LISTA.add(no);
+        });
+    }
+
+    public static void removeNode(Node no) {
+        Platform.runLater(() -> {
+            LISTA.remove(no);
+        });
     }
 
     public static void addNotificao(UsuarioBean remetente, UsuarioBean destinatario, String horario, int tipo) {
         if (tipo == 2) {
             if (remetente == destinatario) {
                 System.out.println("entrada usuario");
-//                lista.add(MensagemController.getEntradaUsuario(remetente, horario));
+//                LISTA.add(MensagemController.getEntradaUsuario(remetente, horario));
             } else {
                 System.out.println("entrada cliente");
-//                lista.add(MensagemController.getEntradaCliente(destinatario, horario));
+//                LISTA.add(MensagemController.getEntradaCliente(destinatario, horario));
             }
         } else {
             System.out.println("saida cliente");
-//            lista.add(MensagemController.getSaidaCliente(remetente, horario));
+//            LISTA.add(MensagemController.getSaidaCliente(remetente, horario));
         }
     }
 
