@@ -7,8 +7,8 @@ package pessoa.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Calendar;
 import org.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -76,8 +76,6 @@ public class PessoaBean implements Serializable {
         this.sexo = json.getString("sexo");
     }
 
-    
-    
     public Integer getId() {
         return id;
     }
@@ -91,9 +89,15 @@ public class PessoaBean implements Serializable {
     }
     
     public String getNomeFormatado() {
-        String n = this.nome;
-	String[] s = n.trim().split(" ");
-        return s[0] + " " + s[s.length-1];
+        String nome = this.nome;
+        String primeiroNome;
+        String ultimoNome;
+	String[] s = nome.trim().split(" ");
+        primeiroNome = s[0].toLowerCase();
+        ultimoNome = s[s.length-1].toLowerCase();
+        nome = StringUtils.capitalize(primeiroNome) + " " + StringUtils.capitalize(ultimoNome);
+        System.out.println(nome);
+        return nome;
     }
 
     public void setNome(String nome) {

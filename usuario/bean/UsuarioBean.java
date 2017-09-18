@@ -176,7 +176,7 @@ public class UsuarioBean implements Serializable {
 
     @Override
     public String toString() {
-        return this.id + " - " + this.login;
+        return this.getPessoa().getNomeFormatado() + " (" + this.login + ")";
     }
 
     /**

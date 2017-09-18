@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 
-<BorderPane fx:id="principal" minHeight="675.0" minWidth="1000.0" prefHeight="675.0" prefWidth="1000.0" styleClass="principal" stylesheets="@main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <fx:include fx:id="conteudo" source="/cadastro/novo/view/NovoFXML.fxml" />
-   </center>
+
+<BorderPane fx:id="principal" minHeight="675.0" minWidth="1000.0" prefHeight="675.0" prefWidth="1000.0" styleClass="main" stylesheets="@main.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
 </BorderPane>

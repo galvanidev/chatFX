@@ -5,7 +5,6 @@
  */
 package login.view;
 
-import conexao.ConexaoController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,12 +35,6 @@ public class LoginView extends Application {
         } catch (IOException ex) {
             Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
-        ConexaoController.logout();
     }
 
     /**

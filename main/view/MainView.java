@@ -5,6 +5,7 @@
  */
 package main.view;
 
+import conexao.ConexaoController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,8 @@ import javafx.stage.Stage;
  */
 public class MainView extends Application {
 
+    public static Stage primaryStage;
+
     @Override
     public void start(Stage stage) {
         try {
@@ -28,12 +31,19 @@ public class MainView extends Application {
             stage.setMinWidth(1000);
             stage.setMinHeight(675);
             stage.setScene(scene);
+            primaryStage = stage;
             stage.show();
         } catch (IOException ex) {
             Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        ConexaoController.logout();
+    }
+
     /**
      * @param args the command line arguments
      */

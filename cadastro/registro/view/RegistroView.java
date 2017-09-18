@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cadastro.novo.view;
+package cadastro.registro.view;
 
 import login.view.*;
 import conexao.ConexaoController;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  *
  * @author Galvani Júnior
  */
-public class NovoView extends Application {
+public class RegistroView extends Application {
 
     public static Stage primaryStage;
 
@@ -35,7 +35,7 @@ public class NovoView extends Application {
             primaryStage = stage;
             stage.show();
         } catch (IOException ex) {
-            Logger.getLogger(NovoView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegistroView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

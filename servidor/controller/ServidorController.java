@@ -59,7 +59,7 @@ public final class ServidorController {
                 listaUsuarios.entrySet().forEach((usuario) -> {
                     if (!mensagem.getUsuario().equals(usuario.getKey())) {
                         usuario.getValue().println(mensagem.toJson() + "\n");
-                        usuario.getValue().flush();
+                        usuario.getValue().flush(); 
                     }
                 });
                 break;

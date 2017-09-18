@@ -20,7 +20,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import login.view.LoginView;
+import main.controller.MainController;
+import main.view.MainView;
 
 /**
  *
@@ -44,7 +50,7 @@ public class LoginController {
 
     @FXML
     private void initialize() {
-
+        iniciaBinds();
     }
 
     @FXML
@@ -93,13 +99,18 @@ public class LoginController {
                 @Override
                 protected void succeeded() {
                     super.succeeded();
-                    new ClienteView().start(LoginView.primaryStage);
+                    new ClienteView().start(MainView.primaryStage);
                 }
 
             };
             Thread t = new Thread(login);
             t.start();
         }
+    }
+
+    @FXML
+    private void cadastrar() {
+        MainController.altera("registro");
     }
 
     private String getUsuario() {
@@ -110,4 +121,9 @@ public class LoginController {
         return tfSenha.getText();
     }
 
+    private void iniciaBinds() {
+        btnEntrar.disableProperty().bind(tfUsuario.textProperty().isEmpty()
+                .or(tfSenha.textProperty().isEmpty()));
+    }
+    
 }

@@ -21,6 +21,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import login.view.LoginView;
+import main.view.MainView;
 import mensagem.model.MensagemModel;
 import usuario.bean.UsuarioBean;
 
@@ -50,7 +51,7 @@ public class ClienteController {
     public void sair() {
         ConexaoController.logout();
         UsuarioModel.clear();
-        new LoginView().start(LoginView.primaryStage);
+        new MainView().start(MainView.primaryStage);
     }
 
     @FXML

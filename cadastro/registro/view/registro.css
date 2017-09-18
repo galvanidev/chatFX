@@ -62,7 +62,7 @@
 }
 
 .boxCadastro {
-    -fx-background-image: url("/login/imagens/info.jpg");
+    -fx-background-image: url("/cadastro/registro/imagens/info.jpg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 750;
     -fx-background-position: right bottom;

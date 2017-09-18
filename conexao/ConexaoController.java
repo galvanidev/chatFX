@@ -13,6 +13,7 @@ import java.io.Writer;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ public class ConexaoController {
     private static BufferedReader in;
     private static UsuarioBean usuario;
 
-    private static void fazConexao() {
+    private static void fazConexao() throws ConexaoException{
         try {
             // Inicia troca de socket com servidor
             servidor = new Socket(ConfiguracaoServidor.getHost(), ConfiguracaoServidor.getPort());
@@ -44,6 +45,7 @@ public class ConexaoController {
             pw = new PrintWriter(os);
             in = new BufferedReader(new InputStreamReader(is));
         } catch (IOException ex) {
+            // Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
             throw new ConexaoException("Verifique sua conexão.");
         }
     }
@@ -54,7 +56,7 @@ public class ConexaoController {
             leitura.close();
             escrita.close();
         } catch (IOException ex) {
-            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -73,8 +75,9 @@ public class ConexaoController {
                 throw new CadastroException(mensagem.getMensagem());
             }
             throw new CadastroException(mensagem.getMensagem());
-        } catch (IOException ex) {
-            Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ConexaoException ex) {
+            // Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
+            throw new CadastroException(ex.getMessage());
         } finally {
             fechaConexao(servidor, in, pw);
         }
