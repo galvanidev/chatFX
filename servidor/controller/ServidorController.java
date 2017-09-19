@@ -65,7 +65,6 @@ public final class ServidorController {
                 break;
 
             case LOGOUT:
-                System.out.println(mensagem.toJson());
                 // Se for logout, envia para todos menos para o que está saindo
                 listaUsuarios.entrySet().forEach((usuario) -> {
                     usuario.getValue().println(mensagem.toJson() + "\n");
@@ -106,15 +105,16 @@ public final class ServidorController {
     }
 
     private static void adicionarCliente(MensagemBean mensagem, PrintWriter pw, BufferedReader in) throws IOException {
-        UsuarioBean u = new UsuarioBean(mensagem.getUsuario());
-        listaUsuarios.put(u, pw);
-        UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
-        MensagemBean mensagemUsuario = new MensagemBean(TipoMensagem.ATUALIZA_LISTA, mensagem.getUsuario(), usuarios);
-        // System.out.println(mensagemUsuario.toJson());
+        UsuarioBean[] usuariosOnline = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
+        UsuarioBean usuarioTratado = new UsuarioBean(mensagem.getUsuario());
+        listaUsuarios.put(usuarioTratado, pw);
+        System.out.println(usuarioTratado.toJson());
+        MensagemBean mensagemUsuario = new MensagemBean(TipoMensagem.ATUALIZA_LISTA, mensagem.getUsuario(), usuariosOnline);
+        System.out.println(mensagemUsuario.toJson());
         mensagemUsuario.setHora(LocalTime.parse(LocalTime.now().toString()));
         pw.println(mensagemUsuario.toJson() + "\n");
         pw.flush();
-        MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, u);
+        MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, usuarioTratado);
         enviaMensagem(mensagemTodos);
     }
 
@@ -203,7 +203,7 @@ public final class ServidorController {
                                     new Thread(tc).start();
                                     pw.println(new MensagemBean(TipoMensagem.SUCESSO, resposta.getUsuario()).toJson() + "\n");
                                     pw.flush();
-                                    resposta = new MensagemBean(TipoMensagem.LOGIN, resposta.getUsuario());
+                                    resposta.setTipo(TipoMensagem.LOGIN);
                                     adicionarCliente(resposta, pw, in);
                                 }
                             }

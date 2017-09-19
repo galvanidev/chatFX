@@ -139,6 +139,7 @@ public class ConexaoController {
     
     public static void setUsuario(UsuarioBean u) {
             usuario = u;
+            System.out.println(usuario.toJson());
     }
 
     public static void enviaMensagem(String texto) {

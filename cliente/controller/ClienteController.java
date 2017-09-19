@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import main.view.MainView;
 import mensagem.model.MensagemModel;
 import usuario.bean.UsuarioBean;
@@ -29,15 +30,12 @@ import usuario.bean.UsuarioBean;
  * @author Galvani Júnior
  */
 public class ClienteController {
-
-    @FXML
-    private VBox campoMensagens;
-    @FXML
-    private TextField tfMensagem;
-    @FXML
-    private ScrollPane scrollMensagens;
-    @FXML
-    private ListView<UsuarioBean> listaUsuarios;
+    
+    @FXML private BorderPane principal;
+    @FXML private VBox campoMensagens;
+    @FXML private TextField tfMensagem;
+    @FXML private ScrollPane scrollMensagens;
+    @FXML private ListView<UsuarioBean> listaUsuarios;
 
     @FXML
     private void initialize() {
@@ -72,7 +70,7 @@ public class ClienteController {
     @FXML
     public void selecionaItem(MouseEvent ev) {
         if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
-            System.out.println(listaUsuarios.getSelectionModel().getSelectedItem().toString());
+            openDialog(listaUsuarios.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -99,5 +97,9 @@ public class ClienteController {
                     }
                 }
             });
+    }
+
+    private void openDialog(UsuarioBean selectedItem) {
+        System.out.println(selectedItem.toJson());
     }
 }

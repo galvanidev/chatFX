@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.FrameWork;
+import util.ValidadorCPF;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -29,7 +30,9 @@ import util.FrameWork;
 public class TesteMensagem {
 
     public static void main(String[] args) {
-        MensagemBean mensagem = new MensagemBean();
+        
+        System.out.println(ValidadorCPF.isValido("01209118254"));
+        /*MensagemBean mensagem = new MensagemBean();
         UsuarioBean usuarios[];
         usuarios = new UsuarioBean[5];
         UsuarioBean usuario = new UsuarioBean();
@@ -52,6 +55,6 @@ public class TesteMensagem {
             ConexaoController.cadastra(usuario, pessoa);
         } catch(CadastroException ex) {
             System.out.println(ex);
-        }
+        }*/
     }
 }

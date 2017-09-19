@@ -46,7 +46,6 @@ public class ThreadConexao implements Runnable {
 
                 switch (mensagem.getTipo()) {
                     case LOGOUT:
-                        System.out.println("caiu no logout");
                         UsuarioModel.remove(mensagem.getUsuario());
                         MensagemController.notificaSaida(mensagem);
                         break;
@@ -59,11 +58,14 @@ public class ThreadConexao implements Runnable {
                         }
                         break;
                     case ATUALIZA_LISTA:
+                        System.out.println(mensagem.toJson());
                         // Quando cliente acaba de entrar
                         ConexaoController.setUsuario(mensagem.getUsuario());
+                        UsuarioModel.add(mensagem.getUsuario());
                         UsuarioModel.atualizaLista(mensagem.getUsuarios());
                         break;
                     case LOGIN:
+                        System.out.println(mensagem.toJson());
                         // Quando um novo cliente acessa o sistema
                         UsuarioModel.add(mensagem.getUsuario());
                         MensagemController.notificaEntrada(mensagem.getUsuario());
