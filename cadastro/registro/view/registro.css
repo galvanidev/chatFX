@@ -7,7 +7,7 @@
     -fx-font-size: 25;
     -fx-text-fill: black;
     -fx-font-weight: bold;
-    -fx-padding: 0 0 0 0;
+    -fx-padding: 16 0 0 0;
 
 }
 
@@ -44,21 +44,33 @@
     -fx-focus-color: red ;
 }
 
-.btnEntrar{
+.btnCadastrar{
     -fx-cursor: hand;
     -fx-background-color: #34acfe;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
-.btnEntrar:hover {
+.btnCadastrar:hover {
     -fx-background-color: #3686b3;
+}
+
+.btnEntrar {
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.btnEntrar:hover {
+    -fx-text-fill: #E6E6E6;
 }
 
 .direitos {
     -fx-font-size: 13;
     -fx-text-fill: #A6A6A6;
     -fx-font-weight: bold;
+    -fx-padding: 0 0 0 0;
 }
 
 .boxCadastro {
@@ -78,24 +90,15 @@
     -fx-font-weight: bold;
 }
 
-.btnCadastrar {
-    -fx-text-fill: white;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.btnCadastrar:hover {
-    -fx-text-fill: #E6E6E6;
-}
-
-.erroMensagem {
+.txtErro {
     -fx-font-size: 13;
     -fx-text-fill: #ff214a;
     -fx-font-weight: bold;
 }
 
-.progress-bar > .bar {
-    -fx-background-insets: 1 1 2 1;
-    -fx-padding: 0.20em;
+
+.txtPop {
+    -fx-font-size: 13;
+    -fx-text-fill: #ff214a;
+    -fx-padding: 2 8 3 8;
 }

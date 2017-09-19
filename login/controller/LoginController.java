@@ -10,6 +10,7 @@ import conexao.ConexaoController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -22,11 +23,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import login.view.LoginView;
 import main.controller.MainController;
 import main.view.MainView;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.decoration.Decorator;
+import org.controlsfx.control.decoration.StyleClassDecoration;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
+import org.controlsfx.validation.decoration.GraphicValidationDecoration;
 
 /**
  *
@@ -54,7 +63,7 @@ public class LoginController {
     }
 
     @FXML
-    private void tfUsuarioKeyPressed(KeyEvent e) {
+    private void tfUsuarioKeyPressed(KeyEvent e) {        
         if (e.getCode().equals(KeyCode.ENTER)) {
             entrar();
         }
@@ -110,7 +119,7 @@ public class LoginController {
 
     @FXML
     private void cadastrar() {
-        MainController.altera("registro");
+        MainController.altera("registro");        
     }
 
     private String getUsuario() {

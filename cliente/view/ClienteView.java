@@ -36,7 +36,6 @@ public class ClienteView extends Application {
 
     @Override
     public void stop() throws Exception {
-        System.out.println("foi fechado");
         super.stop();   
     }
     

@@ -18,21 +18,24 @@
    <children>
       <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="400.0">
          <center>
-            <VBox alignment="CENTER" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_CENTER" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="400.0" BorderPane.alignment="CENTER">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titulo" text="CADASTRE-SE" textAlignment="CENTER">
                      <VBox.margin>
-                        <Insets top="16.0" />
+                        <Insets />
                      </VBox.margin></Label>
                   <Label contentDisplay="CENTER" styleClass="subtitulo" text="PREENCHA TODOS OS CAMPOS" />
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="nome" prefWidth="300.0" promptText="Nome completo" styleClass="textField" />
+                        <TextField fx:id="nome" prefWidth="300.0" promptText="Nome completo" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Digite seu nome completo" />
+                           </tooltip></TextField>
                      </children>
                      <padding>
                         <Insets top="8.0" />
@@ -40,12 +43,15 @@
                   </HBox>
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="cpf" onKeyReleased="#formataCpf" prefWidth="300.0" promptText="CPF" styleClass="textField" />
+                        <TextField fx:id="cpf" onKeyReleased="#formataCpf" prefWidth="300.0" promptText="CPF" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Digite seu CPF" />
+                           </tooltip></TextField>
                      </children>
                      <VBox.margin>
                         <Insets top="8.0" />
@@ -53,7 +59,7 @@
                   </HBox>
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
@@ -62,13 +68,19 @@
                            <HBox.margin>
                               <Insets right="16.0" />
                            </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Defina sua data de nascimento" />
+                           </tooltip>
                         </DatePicker>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <ComboBox fx:id="sexo" nodeOrientation="LEFT_TO_RIGHT" prefHeight="39.0" prefWidth="172.0" promptText="Sexo" styleClass="textField" />
+                        <ComboBox fx:id="sexo" nodeOrientation="LEFT_TO_RIGHT" prefHeight="39.0" prefWidth="172.0" promptText="Sexo" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Defina seu sexo" />
+                           </tooltip></ComboBox>
                      </children>
                      <VBox.margin>
                         <Insets top="8.0" />
@@ -76,12 +88,15 @@
                   </HBox>
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="login" prefWidth="300.0" promptText="Usuário" styleClass="textField" />
+                        <TextField fx:id="login" prefWidth="300.0" promptText="Usuário" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Defina um nome de usuário" />
+                           </tooltip></TextField>
                      </children>
                      <VBox.margin>
                         <Insets top="8.0" />
@@ -89,7 +104,7 @@
                   </HBox>
                   <HBox fx:id="boxEmail" onMouseDragged="#mouse" prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
@@ -105,12 +120,15 @@
                   </HBox>
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <PasswordField fx:id="senha" prefWidth="300.0" promptText="Senha" styleClass="textField" />
+                        <PasswordField fx:id="senha" prefWidth="300.0" promptText="Senha" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Digite uma senha" />
+                           </tooltip></PasswordField>
                      </children>
                      <VBox.margin>
                         <Insets top="8.0" />
@@ -118,30 +136,41 @@
                   </HBox>
                   <HBox prefWidth="300.0">
                      <children>
-                        <Text fill="#fcb6b6" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                        <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>
                               <Insets right="8.0" top="9.0" />
                            </HBox.margin>
                         </Text>
-                        <PasswordField fx:id="confirmaSenha" prefWidth="300.0" promptText="Confirma senha" styleClass="textField" />
+                        <PasswordField fx:id="confirmaSenha" prefWidth="300.0" promptText="Confirma senha" styleClass="textField">
+                           <tooltip>
+                              <Tooltip text="Confirme sua senha" />
+                           </tooltip></PasswordField>
                      </children>
                      <VBox.margin>
                         <Insets top="8.0" />
                      </VBox.margin>
                   </HBox>
-                  <Button fx:id="cadastrar" mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="300.0" styleClass="btnEntrar" text="Cadastrar">
+                  <Label fx:id="txtErro" styleClass="txtErro">
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="cadastrar" mnemonicParsing="false" onAction="#cadastrar" prefHeight="35.0" prefWidth="300.0" styleClass="btnCadastrar" text="Cadastrar">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <VBox.margin>
-                        <Insets top="16.0" />
+                        <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
                   <Label alignment="TOP_CENTER" contentDisplay="TOP" minHeight="-Infinity" prefWidth="220.0" styleClass="direitos" text="Desenvolvido por Galvani Júnior Todos os direitos reservados." textAlignment="CENTER" wrapText="true">
                      <VBox.margin>
-                        <Insets bottom="8.0" top="8.0" />
+                        <Insets bottom="16.0" top="8.0" />
                      </VBox.margin></Label>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </VBox>
          </center>
       </BorderPane>
@@ -152,7 +181,7 @@
                   <Insets bottom="16.0" top="100.0" />
                </VBox.margin>
             </Circle>
-            <Label alignment="CENTER" contentDisplay="CENTER" lineSpacing="3.0" minHeight="-Infinity" prefWidth="300.0" styleClass="mensagem" text="O Mensageiro é um aplicativo de mensagens com foco em velocidade e segurança, é super rápido, simples e grátis." textAlignment="CENTER" wrapText="true">
+            <Label alignment="CENTER" contentDisplay="CENTER" lineSpacing="3.0" minHeight="-Infinity" prefWidth="300.0" styleClass="mensagem" text="Você já está mais perto do que imagina. Basta preencher o formulário e sair conversando." textAlignment="CENTER" wrapText="true">
                <VBox.margin>
                   <Insets bottom="25.0" />
                </VBox.margin>
@@ -160,7 +189,7 @@
                   <Insets />
                </opaqueInsets>
             </Label>
-            <Label fx:id="entrar" onMouseClicked="#login" styleClass="btnCadastrar" text="Acessar" underline="true">
+            <Label fx:id="entrar" onMouseClicked="#login" styleClass="btnEntrar" text="Acesse" underline="true">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

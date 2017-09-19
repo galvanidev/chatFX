@@ -94,9 +94,11 @@ public class PessoaBean implements Serializable {
         String ultimoNome;
 	String[] s = nome.trim().split(" ");
         primeiroNome = s[0].toLowerCase();
-        ultimoNome = s[s.length-1].toLowerCase();
-        nome = StringUtils.capitalize(primeiroNome) + " " + StringUtils.capitalize(ultimoNome);
-        System.out.println(nome);
+        if (s.length > 1) {
+            ultimoNome = s[s.length-1].toLowerCase();
+            nome = StringUtils.capitalize(primeiroNome) + " " + StringUtils.capitalize(ultimoNome);
+        } else
+            nome = StringUtils.capitalize(primeiroNome);
         return nome;
     }
 

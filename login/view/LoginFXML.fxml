@@ -34,17 +34,11 @@
                         <Insets top="30.0" />
                      </VBox.margin>
                   </PasswordField>
-                  <HBox fx:id="boxMensagem" alignment="CENTER" prefHeight="50.0">
+                  <Label fx:id="txtErro" contentDisplay="CENTER" styleClass="txtErro" textAlignment="CENTER" textFill="#ff214a">
                      <VBox.margin>
-                        <Insets top="8.0" />
+                        <Insets bottom="16.0" top="32.0" />
                      </VBox.margin>
-                     <children>
-                        <Label fx:id="txtErro" contentDisplay="CENTER" styleClass="erroMensagem" textAlignment="CENTER" textFill="#ff214a" />
-                     </children>
-                     <padding>
-                        <Insets left="16.0" right="16.0" />
-                     </padding>
-                  </HBox>
+                  </Label>
                   <Button fx:id="btnEntrar" mnemonicParsing="false" onAction="#entrar" onMouseClicked="#entrar" prefHeight="35.0" prefWidth="300.0" styleClass="btnEntrar" text="Entrar">
                      <opaqueInsets>
                         <Insets />
@@ -53,7 +47,10 @@
                         <Insets top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Label minHeight="-Infinity" prefWidth="220.0" styleClass="direitos" text="Desenvolvido por Galvani Júnior Todos os direitos reservados." textAlignment="CENTER" wrapText="true" />
+                  <Label alignment="TOP_CENTER" contentDisplay="TOP" prefWidth="220.0" styleClass="direitos" text="Desenvolvido por Galvani Júnior Todos os direitos reservados." textAlignment="CENTER" wrapText="true">
+                     <VBox.margin>
+                        <Insets bottom="16.0" top="16.0" />
+                     </VBox.margin></Label>
                </children>
             </VBox>
          </center>

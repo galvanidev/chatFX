@@ -8,6 +8,7 @@ package cadastro.registro.controller;
 import conexao.CadastroException;
 import conexao.ConexaoController;
 import conexao.ConexaoException;
+import javafx.util.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -16,6 +17,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,9 +33,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import javafx.stage.Popup;
-import javafx.stage.WindowEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import main.controller.MainController;
+import org.controlsfx.control.PopOver;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.TextFieldFormatter;
@@ -62,13 +67,12 @@ public class RegistroController {
     @FXML
     private Button cadastrar;
     @FXML
-    private Tooltip tooltip;
-    @FXML
-    private HBox boxEmail;
-
+    private Label txtErro;
+    
     @FXML
     private void initialize() {
-        iniciaBinds();
+        // iniciaBinds();
+        formataCpf();
         iniciaSexos();
     }
 
@@ -79,18 +83,18 @@ public class RegistroController {
 
     @FXML
     private void cadastrar() {
-        if (validaEmail().get() && validaSenhas()) {
+        txtErro.setText("");
+        if (validaEmail() & validaSenhas()) {
             PessoaBean pessoa = new PessoaBean();
-            pessoa.setNome(nome.getText());
-            pessoa.setCpf(cpf.getText());
+            pessoa.setNome(nome.getText().toUpperCase());
+            pessoa.setCpf(cpf.getText());   
             LocalDate localDate = dataNascimento.getValue();
             pessoa.setDataNascimento(localDate);
             String s = (String) sexo.getSelectionModel().getSelectedItem();
-            if (s.equals("Masculino")) {
-                pessoa.setSexo("M");
-            } else {
+            if (s.equals("Feminino")) 
                 pessoa.setSexo("F");
-            }
+            else 
+                pessoa.setSexo("M"); 
             UsuarioBean usuario = new UsuarioBean();
             usuario.setLogin(login.getText());
             usuario.setSenha(senha.getText());
@@ -98,8 +102,8 @@ public class RegistroController {
             Platform.runLater(() -> {
                 try {
                     ConexaoController.cadastra(usuario, pessoa);
-                } catch (CadastroException | ConexaoException ex) {
-                    System.out.println(ex.getMessage());
+                } catch (CadastroException ex) {
+                    trataMensagens(ex.getMessage());
                 }
             });
         }
@@ -111,7 +115,6 @@ public class RegistroController {
     }
 
     private void iniciaBinds() {
-
         cadastrar.disableProperty().bind(nome.textProperty().isEmpty()
                 .or(cpf.textProperty().isEmpty()
                         .or(dataNascimento.editorProperty().isNull())
@@ -140,7 +143,7 @@ public class RegistroController {
     }
 
     @FXML
-    private void formataCpf(KeyEvent e) {
+    private void formataCpf() {
         TextFieldFormatter tff = new TextFieldFormatter();
         tff.formatter(cpf, "0123456789]", "###.###.###-##");
     }
@@ -149,19 +152,50 @@ public class RegistroController {
         if (senha.getText().equals(confirmaSenha.getText())) {
             return true;
         }
+        newPop("As senhas não conferem").show(confirmaSenha);
         return false;
     }
 
-    private BooleanBinding validaEmail() {
+    private boolean validaEmail() {
         Pattern regexEmail
                 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = regexEmail.matcher(email.getText());
-        BooleanBinding binding = Bindings.createBooleanBinding(()
-                -> matcher.find());
-        binding.addListener((obs, oldValue, newValue) -> {
-            System.out.println(obs + " " + oldValue + " " + newValue);
-        });
-        // tooltip.show();
-        return binding;
+        if (!matcher.find()) {
+            newPop("E-mail inválido").show(email);
+            return false;
+        }
+        return true;
+    }
+
+    private PopOver newPop(String mensagem) {
+        Label label = new Label(mensagem);
+        label.getStyleClass().add("txtPop");
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(label);
+        popOver.closeButtonEnabledProperty().set(false);
+        popOver.arrowLocationProperty().bind(new SimpleObjectProperty<>(PopOver.ArrowLocation.LEFT_CENTER));
+        popOver.arrowSizeProperty().set(3);
+        popOver.arrowIndentProperty().set(3);
+        popOver.hide(Duration.seconds(4));
+        popOver.hideOnEscapeProperty();
+        popOver.setDetachable(Boolean.FALSE);
+        return popOver;
+    }
+
+    private void trataMensagens(String mensagem) {
+        if (mensagem.contains("_")) {
+            String s[] = mensagem.split("_");
+            for (String x : s) {
+                if (x.contains("pessoa"))
+                    newPop(x).show(cpf);
+                if (x.contains("Usuário")) 
+                    newPop(x).show(login);
+            }
+        } else {
+            if (mensagem.contains("sucesso"))
+                System.out.println("Sucesso");
+            else 
+                txtErro.setText(mensagem);
+        }
     }
 }

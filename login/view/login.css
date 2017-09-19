@@ -40,11 +40,6 @@
     -fx-highlight-fill: -fx-accent;
 }
 
-.textField:error {
-    -fx-text-box-border: red ;
-    -fx-focus-color: red ;
-}
-
 .btnEntrar{
     -fx-cursor: hand;
     -fx-background-color: #34acfe;
@@ -60,7 +55,7 @@
     -fx-font-size: 13;
     -fx-text-fill: #A6A6A6;
     -fx-font-weight: bold;
-    -fx-padding: 16 0 16 0;
+    -fx-padding: 0 0 0 0;
 }
 
 .boxCadastro {
@@ -92,6 +87,12 @@
 }
 
 .erroMensagem {
+    -fx-font-size: 13;
+    -fx-text-fill: #ff214a;
+    -fx-font-weight: bold;
+}
+
+.txtErro {
     -fx-font-size: 13;
     -fx-text-fill: #ff214a;
     -fx-font-weight: bold;

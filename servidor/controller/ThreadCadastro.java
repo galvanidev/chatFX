@@ -5,20 +5,16 @@
  */
 package servidor.controller;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
 import mensagem.bean.TipoMensagem;
 import pessoa.bean.PessoaBean;
 import pessoa.dao.PessoaDAO;
 import usuario.bean.UsuarioBean;
 import usuario.dao.UsuarioDAO;
-import util.DaoException;
 
 /**
  *
@@ -50,14 +46,14 @@ public class ThreadCadastro {
                 } else {
                     if (pessoaExiste) {
                         mensagem.setTipo(TipoMensagem.ERRO);
-                        mensagem.setMensagem("Esta pessoa já possui cadastro_");
+                        mensagem.setMensagem("_Esta pessoa já possui cadastro_");
                     }
                     if (usuarioExiste) {
                         mensagem.setTipo(TipoMensagem.ERRO);
-                        if (mensagem.getMensagem()== null) {
-                            mensagem.setMensagem("Usuário indisponível_");
+                        if (mensagem.getMensagem() == null) {
+                            mensagem.setMensagem("_Usuário indisponível_");
                         } else {
-                            mensagem.setMensagem(mensagem.getMensagem() + "Usuário indisponível_");
+                            mensagem.setMensagem(mensagem.getMensagem() + "_Usuário indisponível_");
                         }
                     }
                 }
