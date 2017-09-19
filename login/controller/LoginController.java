@@ -82,7 +82,7 @@ public class LoginController {
             task = true;
             Task<Boolean> login = new Task<Boolean>() {
                 @Override
-                protected Boolean call() throws Exception {
+                protected Boolean call() {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -102,7 +102,7 @@ public class LoginController {
                     txtErro.setText(getMessage());
                     boxMensagem.getChildren().clear();
                     boxMensagem.getChildren().add(txtErro);
-                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, getException().getStackTrace());
+                    // Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, getException().getStackTrace());
                 }
 
                 @Override

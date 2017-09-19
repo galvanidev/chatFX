@@ -43,9 +43,13 @@ public class ThreadConexao implements Runnable {
                 if (linha.isEmpty()) { continue; };
                 json = new JSONObject(linha);
                 MensagemBean mensagem = MensagemBean.toObject(json);
-                System.out.println(json);
 
                 switch (mensagem.getTipo()) {
+                    case LOGOUT:
+                        System.out.println("caiu no logout");
+                        UsuarioModel.remove(mensagem.getUsuario());
+                        MensagemController.notificaSaida(mensagem);
+                        break;
                     case MENSAGEM:
                         // Recebimento das mensagens
                         if (mensagem.getUsuario().equals(ConexaoController.getUsuario())) {
@@ -65,10 +69,6 @@ public class ThreadConexao implements Runnable {
                         MensagemController.notificaEntrada(mensagem.getUsuario());
                         break;
                     // Quando um cliente sai do sistema
-                    case LOGOUT:
-                        MensagemController.notificaSaida(mensagem.getUsuario());
-                        UsuarioModel.remove(mensagem.getUsuario());
-                        break;
                     case ATUALIZA_CADASTRO:
                         System.out.println("Alguém atualizou seus dados");
                         break;

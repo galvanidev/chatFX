@@ -5,6 +5,7 @@
  */
 package usuario.model;
 
+import java.io.Serializable;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -15,7 +16,7 @@ import usuario.bean.UsuarioBean;
  *
  * @author vlagjuio
  */
-public class UsuarioModel {
+public class UsuarioModel implements Serializable {
 
     private static UsuarioBean usuarioRetorno;
 
@@ -27,16 +28,15 @@ public class UsuarioModel {
 
     public static void add(UsuarioBean u) {
         Platform.runLater(() -> {
-            if (LISTA.contains(u)) {
-                LISTA.remove(u);
-            }
             LISTA.add(u);
         });
     }
 
     public static void atualizaLista(UsuarioBean[] usuarios) {
-        LISTA.addAll(usuarios);
-        System.out.println(LISTA);
+        Platform.runLater(() -> {
+            LISTA.addAll(usuarios);
+        });
+
     }
 
     public static void remove(UsuarioBean u) {
@@ -49,9 +49,9 @@ public class UsuarioModel {
         LISTA.clear();
     }
 
-    public static UsuarioBean get(Integer id) {
+    public static UsuarioBean get(UsuarioBean usuario) {
         for (UsuarioBean u : LISTA) {
-            if (u.getId().equals(id)) {
+            if (u.equals(usuario)) {
                 usuarioRetorno = u;
             }
         }

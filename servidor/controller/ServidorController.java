@@ -65,6 +65,7 @@ public final class ServidorController {
                 break;
 
             case LOGOUT:
+                System.out.println(mensagem.toJson());
                 // Se for logout, envia para todos menos para o que está saindo
                 listaUsuarios.entrySet().forEach((usuario) -> {
                     usuario.getValue().println(mensagem.toJson() + "\n");
@@ -74,8 +75,8 @@ public final class ServidorController {
 
             case MENSAGEM:
                 // Se for tipo mensagem, envia pra todo mundo  
-                u = new UsuarioBean(mensagem.getUsuario().getId(),
-                        mensagem.getUsuario().getLogin());
+                u = new UsuarioBean();
+                u.setId((mensagem.getUsuario().getId()));
                 m = new MensagemBean(mensagem.getTipo(), u,
                         mensagem.getMensagem(), mensagem.getHora());
                 listaUsuarios.entrySet().forEach((usuario) -> { 
@@ -105,13 +106,15 @@ public final class ServidorController {
     }
 
     private static void adicionarCliente(MensagemBean mensagem, PrintWriter pw, BufferedReader in) throws IOException {
-        listaUsuarios.put(mensagem.getUsuario(), pw);
+        UsuarioBean u = new UsuarioBean(mensagem.getUsuario());
+        listaUsuarios.put(u, pw);
         UsuarioBean[] usuarios = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
         MensagemBean mensagemUsuario = new MensagemBean(TipoMensagem.ATUALIZA_LISTA, mensagem.getUsuario(), usuarios);
+        // System.out.println(mensagemUsuario.toJson());
         mensagemUsuario.setHora(LocalTime.parse(LocalTime.now().toString()));
         pw.println(mensagemUsuario.toJson() + "\n");
         pw.flush();
-        MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, mensagem.getUsuario());
+        MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, u);
         enviaMensagem(mensagemTodos);
     }
 
@@ -119,7 +122,7 @@ public final class ServidorController {
         // Retorna um array das keys e busca pelo dono do printwriter para poder fechar corretamente
         listaUsuarios.remove(u);
         fechaConexao(socket, in, pw);
-        enviaMensagem(new MensagemBean(TipoMensagem.LOGOUT, new UsuarioBean(u.getId(), u.getLogin())));
+        enviaMensagem(new MensagemBean(TipoMensagem.LOGOUT, new UsuarioBean(u.getId(), u.getLogin(), u.getPessoa())));
 
     }
 

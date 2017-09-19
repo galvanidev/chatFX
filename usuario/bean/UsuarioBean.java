@@ -23,6 +23,12 @@ public class UsuarioBean implements Serializable {
     private String senha;
     private PessoaBean pessoa;
 
+    public UsuarioBean(Integer id, String login, PessoaBean pessoa) {
+        this.id = id;
+        this.login = login;
+        this.pessoa = new PessoaBean(pessoa.getId(), pessoa.getNome());
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         if (this.id != null) {
@@ -84,6 +90,8 @@ public class UsuarioBean implements Serializable {
     public UsuarioBean(UsuarioBean trataUsuario) {
         this.id = trataUsuario.getId();
         this.login = trataUsuario.getLogin();
+        this.email = trataUsuario.getEmail();
+        this.pessoa = new PessoaBean(trataUsuario.getPessoa());
     }
 
     /**
@@ -145,8 +153,7 @@ public class UsuarioBean implements Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        hash = 53 * hash + Objects.hashCode(this.login);
+        hash = 67 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -162,21 +169,15 @@ public class UsuarioBean implements Serializable {
             return false;
         }
         final UsuarioBean other = (UsuarioBean) obj;
-        if (!Objects.equals(this.login, other.login)) {
-            return false;
-        }
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
-    }
-
-
-    
+    } 
 
     @Override
     public String toString() {
-        return this.getPessoa().getNomeFormatado() + " (" + this.login + ")";
+        return this.getPessoa().nomeFormatado() + " (" + this.login + ")";
     }
 
     /**

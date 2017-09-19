@@ -31,7 +31,7 @@ public class ThreadLogin {
                 if (retorno == null) {
                     return mensagem = new MensagemBean(TipoMensagem.ERRO, null, null, "Usuário e/ou senha inválido(s).");
                 } else {
-                    return mensagem = new MensagemBean(TipoMensagem.SUCESSO, retorno, retorno.getPessoa());
+                    return mensagem = new MensagemBean(TipoMensagem.SUCESSO, retorno);
                 }
             });
             mensagem = futureResult.get();

@@ -80,6 +80,14 @@
     -fx-effect: dropshadow( gaussian, rgba(0, 0, 0, 0.05), 8, 0, 1, 3);  
 }
 
+.mensagemSaida {
+    -fx-font-size: 14;
+    -fx-background-color: #f9d1d1;
+    -fx-background-radius: 8;
+    -fx-padding: 8 8 8 8;
+    -fx-effect: dropshadow( gaussian, rgba(0, 0, 0, 0.05), 8, 0, 1, 3);  
+}
+
 .hora {
     -fx-font-weight: bold;
     -fx-font-size: 11;

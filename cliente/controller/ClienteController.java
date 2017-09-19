@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
@@ -61,15 +62,17 @@ public class ClienteController {
 
     @FXML
     private void enviarMensagem() {
-        ConexaoController.enviaMensagem(tfMensagem.getText());
-        tfMensagem.clear();
-        tfMensagem.requestFocus();
+        if (!tfMensagem.getText().isEmpty()) {
+            ConexaoController.enviaMensagem(tfMensagem.getText());
+            tfMensagem.clear();
+            tfMensagem.requestFocus();
+        }
     }
 
     @FXML
     public void selecionaItem(MouseEvent ev) {
         if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
-
+            System.out.println(listaUsuarios.getSelectionModel().getSelectedItem().toString());
         }
     }
 
@@ -78,26 +81,23 @@ public class ClienteController {
         scrollMensagens.vvalueProperty().bind(campoMensagens.heightProperty());
     }
 
-    public void atualizaListaUsuarios() {
-        listaUsuarios.setItems(UsuarioModel.getLista());
+    public void atualizaListaUsuarios(List<? extends UsuarioBean> usuarios) {
+        listaUsuarios.getItems().addAll(usuarios);
     }
 
     private void iniciaEscutas() {
+            // Escuta para os usuários
+            UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> {
+                
+            });
 
-        // Escuta para os usuários
-        UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> {
-            while (change.next()) {
-                atualizaListaUsuarios();
-            }
-        });
-
-        // Escuta para as mensagens
-        MensagemModel.getLISTA().addListener((ListChangeListener.Change<? extends Node> change) -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    recebeMensagens(change.getAddedSubList());
+            // Escuta para as mensagens
+            MensagemModel.getLISTA().addListener((ListChangeListener.Change<? extends Node> change) -> {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        recebeMensagens(change.getAddedSubList());
+                    }
                 }
-            }
-        });
+            });
     }
 }

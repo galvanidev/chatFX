@@ -68,6 +68,13 @@ public class PessoaBean implements Serializable {
         this.sexo = sexo;
     }
     
+    public PessoaBean(PessoaBean trataPessoa) { 
+        this.id = trataPessoa.getId();
+        this.nome = trataPessoa.getNome();
+        this.dataNascimento = trataPessoa.getDataNascimento();
+        this.sexo = trataPessoa.getSexo();
+    }
+    
     public PessoaBean(JSONObject json) {
         this.id = json.getInt("id");
         this.nome = json.getString("nome");
@@ -88,7 +95,7 @@ public class PessoaBean implements Serializable {
         return nome;
     }
     
-    public String getNomeFormatado() {
+    public String nomeFormatado() {
         String nome = this.nome;
         String primeiroNome;
         String ultimoNome;
