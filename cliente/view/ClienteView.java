@@ -24,9 +24,7 @@ public class ClienteView extends Application {
     public void start(Stage stage) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("ClienteFXML.fxml"));
-            Scene scene = new Scene(root);
-            stage.setMinWidth(1000);
-            stage.setMinHeight(675);
+            Scene scene = new Scene(root);            
             stage.setScene(scene);
             stage.show();
         } catch (IOException ex) {

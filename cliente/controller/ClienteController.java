@@ -5,7 +5,12 @@
  */
 package cliente.controller;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXListView;
 import conexao.ConexaoController;
+import java.awt.event.ActionEvent;
 import usuario.model.UsuarioModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -16,14 +21,18 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import main.view.MainView;
 import mensagem.model.MensagemModel;
 import usuario.bean.UsuarioBean;
+import usuario.model.ListCellUsuario;
 
 /**
  *
@@ -31,6 +40,7 @@ import usuario.bean.UsuarioBean;
  */
 public class ClienteController {
     
+    @FXML private StackPane dialogPane;
     @FXML private BorderPane principal;
     @FXML private VBox campoMensagens;
     @FXML private TextField tfMensagem;
@@ -39,8 +49,8 @@ public class ClienteController {
 
     @FXML
     private void initialize() {
-        listaUsuarios.setItems(UsuarioModel.getLista());
         tfMensagem.requestFocus();
+        inicializaLista();
         iniciaEscutas();
     }
 
@@ -69,9 +79,8 @@ public class ClienteController {
 
     @FXML
     public void selecionaItem(MouseEvent ev) {
-        if (ev.getClickCount() == 2 && ev.getButton() == MouseButton.PRIMARY) {
-            openDialog(listaUsuarios.getSelectionModel().getSelectedItem());
-        }
+        if (ev.getButton() == MouseButton.PRIMARY) 
+            openDialog(listaUsuarios.getSelectionModel().getSelectedItem());   
     }
 
     public void recebeMensagens(List<? extends Node> nos) {
@@ -85,9 +94,7 @@ public class ClienteController {
 
     private void iniciaEscutas() {
             // Escuta para os usuários
-            UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> {
-                
-            });
+            // UsuarioModel.getLista().addListener((ListChangeListener.Change<? extends UsuarioBean> change) -> { });
 
             // Escuta para as mensagens
             MensagemModel.getLISTA().addListener((ListChangeListener.Change<? extends Node> change) -> {
@@ -100,6 +107,24 @@ public class ClienteController {
     }
 
     private void openDialog(UsuarioBean selectedItem) {
-        System.out.println(selectedItem.toJson());
+        JFXDialogLayout content = new JFXDialogLayout();
+        JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.CENTER);
+        Text nome = new Text();
+        content.setHeading(new Text(selectedItem.getPessoa().nomeFormatado() + " (" + selectedItem.getLogin() +" )"));
+        content.setBody(new Text("Conteúdo do meio"));
+        JFXButton botao = new JFXButton("Voltar");
+        botao.setOnAction((event) -> {
+            dialog.close();
+        });
+        content.setActions(botao);
+        dialogPane.visibleProperty().bindBidirectional(dialog.visibleProperty());
+        dialog.show();
+        
     }
+    
+    private void inicializaLista() {
+        listaUsuarios.setItems(UsuarioModel.getLista());
+        listaUsuarios.setCellFactory(listCellUsuario -> new ListCellUsuario());
+    }
+
 }

@@ -28,8 +28,7 @@ public class MainView extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"));
             Scene scene = new Scene(root);
-            stage.setMinWidth(1000);
-            stage.setMinHeight(675);
+            stage.setResizable(false);
             stage.setScene(scene);
             primaryStage = stage;
             stage.show();

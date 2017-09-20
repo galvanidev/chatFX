@@ -109,7 +109,7 @@
 }
 
 .scroll > .viewport {
-   -fx-background-color: #F7F7F7;
+    -fx-background-color: #F7F7F7;
 }
 
 .scroll:focused {
@@ -178,3 +178,23 @@
     -fx-text-fill: #34acfe;
 }
 
+/* List view */
+.list-view {
+    -fx-border-color: #FAFAFA;
+    -fx-background-insets: 1 1 1 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.list-view .list-cell:even:only-child, .jfx-list-view .list-cell:odd:filled {
+}
+
+/* Célula */
+.list-view .list-cell {
+    -fx-background-color: white;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-text-fill: #285777;
+    -fx-border-color: #FAFAFA;
+    -fx-background-insets: 0;
+}

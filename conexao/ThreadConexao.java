@@ -42,9 +42,7 @@ public class ThreadConexao implements Runnable {
                 linha = in.readLine();
                 if (linha.isEmpty()) { continue; };
                 json = new JSONObject(linha);
-                System.out.println("json cliente: " + json);
                 MensagemBean mensagem = MensagemBean.toObject(json);
-                System.out.println("mensagem cast do json: " +  mensagem.toJson());
                 switch (mensagem.getTipo()) {
                     case LOGOUT:
                         UsuarioModel.remove(mensagem.getUsuario());
