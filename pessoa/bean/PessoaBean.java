@@ -36,7 +36,7 @@ public class PessoaBean implements Serializable {
         if (this.cpf != null)
             json.put("cpf", this.cpf);
         if (this.dataNascimento != null)
-            json.put("data_nascimento", this.dataNascimento);
+            json.put("dataNascimento", this.dataNascimento);
         if (this.sexo != null)
             json.put("sexo", this.sexo);
         return json;
@@ -50,8 +50,8 @@ public class PessoaBean implements Serializable {
             p.setNome(json.getString("nome"));
         if (json.has("cpf"))
             p.setCpf(json.getString("cpf"));
-        if (json.has("data_nascimento")) {
-            LocalDate d = LocalDate.parse((CharSequence) json.get("data_nascimento"));
+        if (json.has("dataNascimento")) {
+            LocalDate d = LocalDate.parse(json.get("dataNascimento").toString());
             p.setDataNascimento(d);
         }
         if (json.has("sexo"))
@@ -79,7 +79,7 @@ public class PessoaBean implements Serializable {
         this.id = json.getInt("id");
         this.nome = json.getString("nome");
         this.cpf = json.getString("cpf");
-        this.dataNascimento = (LocalDate) json.get("data_nascimento");
+        this.dataNascimento = (LocalDate) json.get("dataNascimento");
         this.sexo = json.getString("sexo");
     }
 

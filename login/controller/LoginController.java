@@ -10,7 +10,6 @@ import conexao.ConexaoController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,21 +20,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import login.view.LoginView;
 import main.controller.MainController;
 import main.view.MainView;
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.decoration.Decorator;
-import org.controlsfx.control.decoration.StyleClassDecoration;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
-import org.controlsfx.validation.decoration.GraphicValidationDecoration;
 
 /**
  *
@@ -83,13 +69,10 @@ public class LoginController {
             Task<Boolean> login = new Task<Boolean>() {
                 @Override
                 protected Boolean call() {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            ProgressBar pg = new ProgressBar(ProgressBar.INDETERMINATE_PROGRESS);
-                            boxMensagem.getChildren().clear();
-                            boxMensagem.getChildren().add(pg);
-                        }
+                    Platform.runLater(() -> {
+                        ProgressBar pg = new ProgressBar(ProgressBar.INDETERMINATE_PROGRESS);
+                        boxMensagem.getChildren().clear();
+                        boxMensagem.getChildren().add(pg);
                     });
                     return ConexaoController.login(getUsuario(), getSenha());
                 }
@@ -102,7 +85,7 @@ public class LoginController {
                     txtErro.setText(getMessage());
                     boxMensagem.getChildren().clear();
                     boxMensagem.getChildren().add(txtErro);
-                    // Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, getException().getStackTrace());
+                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, getException().getStackTrace());
                 }
 
                 @Override

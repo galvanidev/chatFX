@@ -86,6 +86,7 @@ public class DateUtil {
     }
 
     public static Date formataData(String data) throws ParseException {
+        System.out.println(data);
         SimpleDateFormat dataFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dataFormat.parse(data);
     }

@@ -42,8 +42,9 @@ public class ThreadConexao implements Runnable {
                 linha = in.readLine();
                 if (linha.isEmpty()) { continue; };
                 json = new JSONObject(linha);
+                System.out.println("json cliente: " + json);
                 MensagemBean mensagem = MensagemBean.toObject(json);
-
+                System.out.println("mensagem cast do json: " +  mensagem.toJson());
                 switch (mensagem.getTipo()) {
                     case LOGOUT:
                         UsuarioModel.remove(mensagem.getUsuario());
@@ -58,14 +59,12 @@ public class ThreadConexao implements Runnable {
                         }
                         break;
                     case ATUALIZA_LISTA:
-                        System.out.println(mensagem.toJson());
                         // Quando cliente acaba de entrar
                         ConexaoController.setUsuario(mensagem.getUsuario());
                         UsuarioModel.add(mensagem.getUsuario());
                         UsuarioModel.atualizaLista(mensagem.getUsuarios());
                         break;
                     case LOGIN:
-                        System.out.println(mensagem.toJson());
                         // Quando um novo cliente acessa o sistema
                         UsuarioModel.add(mensagem.getUsuario());
                         MensagemController.notificaEntrada(mensagem.getUsuario());

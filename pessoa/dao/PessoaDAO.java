@@ -6,9 +6,11 @@
 package pessoa.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +21,7 @@ import usuario.bean.UsuarioBean;
 import util.BaseDAO;
 import util.ConexaoPostgreSql;
 import util.DaoException;
+import util.DateUtil;
 
 /**
  *
@@ -34,7 +37,7 @@ public class PessoaDAO implements BaseDAO {
     public Object inserir(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "INSERT INTO pessoa(nome, cpf, data_nascimento, sexo) VALUES(?, ?, ?, ?) "
+            String sql = "INSERT INTO pessoa(nome, cpf, dataNascimento, sexo) VALUES(?, ?, ?, ?) "
                     + "RETURNING id";
             pst = con.prepareStatement(sql);
             PessoaBean pessoa = (PessoaBean) obj;
@@ -61,7 +64,7 @@ public class PessoaDAO implements BaseDAO {
         try {
             con = ConexaoPostgreSql.getConexao();
             PessoaBean pessoa = (PessoaBean) obj;
-            String sql = "UPDATE pessoa SET nome = ?, cpf = ?, data_nascimento = ?, sexo = ?  WHERE id = ?";
+            String sql = "UPDATE pessoa SET nome = ?, cpf = ?, dataNascimento = ?, sexo = ?  WHERE id = ?";
             pst = con.prepareStatement(sql);
             pst.setString(1, pessoa.getNome());
             pst.setString(2, pessoa.getCpf());
@@ -175,7 +178,7 @@ public class PessoaDAO implements BaseDAO {
                 PessoaBean pessoa = new PessoaBean();
                 pessoa.setId(rs.getInt(1));
                 pessoa.setNome(rs.getString("nome"));
-                pessoa.setDataNascimento(LocalDate.parse(rs.getString("data_nascimento")));
+                pessoa.setDataNascimento(LocalDate.parse(rs.getString("dataNascimento")));
                 pessoa.setSexo(rs.getString("sexo"));
                 pessoa.setCpf(rs.getString("cpf"));
                 return pessoa;

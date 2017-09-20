@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mensagem.bean.MensagemBean;
@@ -109,9 +110,10 @@ public class ConexaoController {
 
             json = new JSONObject(in.readLine());
             mensagem = MensagemBean.toObject(json);
-
+            
             if (mensagem.getTipo() == TipoMensagem.SUCESSO) {
                 usuario = mensagem.getUsuario();
+                System.out.println(mensagem.getUsuario().toJson());
                 iniciaThread();
                 return true;
             } else {
@@ -139,7 +141,6 @@ public class ConexaoController {
     
     public static void setUsuario(UsuarioBean u) {
             usuario = u;
-            System.out.println(usuario.toJson());
     }
 
     public static void enviaMensagem(String texto) {

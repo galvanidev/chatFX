@@ -6,6 +6,7 @@
 package usuario.bean;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Objects;
 import org.json.JSONArray;
 import org.json.JSONObject;

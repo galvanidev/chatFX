@@ -108,14 +108,13 @@ public final class ServidorController {
         UsuarioBean[] usuariosOnline = (UsuarioBean[]) listaUsuarios.keySet().toArray(new UsuarioBean[listaUsuarios.size()]);
         UsuarioBean usuarioTratado = new UsuarioBean(mensagem.getUsuario());
         listaUsuarios.put(usuarioTratado, pw);
-        System.out.println(usuarioTratado.toJson());
         MensagemBean mensagemUsuario = new MensagemBean(TipoMensagem.ATUALIZA_LISTA, mensagem.getUsuario(), usuariosOnline);
-        System.out.println(mensagemUsuario.toJson());
         mensagemUsuario.setHora(LocalTime.parse(LocalTime.now().toString()));
         pw.println(mensagemUsuario.toJson() + "\n");
         pw.flush();
         MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, usuarioTratado);
         enviaMensagem(mensagemTodos);
+        System.out.println(mensagemUsuario.toJson());
     }
 
     public static void removeCliente(UsuarioBean u, BufferedReader in, PrintWriter pw, Socket socket) {
@@ -197,7 +196,7 @@ public final class ServidorController {
                                     pw.println(new MensagemBean(TipoMensagem.ERRO, "Usuário já está logado").toJson() + "\n");
                                     pw.println(resposta.toJson() + "\n");
                                     pw.flush();
-                                } else {
+                                } else {    
                                     // Cliente pode acessar, cria uma nova thread para tratar as mensagens
                                     ThreadTratamento tc = new ThreadTratamento(client, in, pw, resposta.getUsuario());
                                     new Thread(tc).start();

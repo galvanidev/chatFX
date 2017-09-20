@@ -127,7 +127,7 @@ public class UsuarioDAO implements BaseDAO {
                 usuario.setId(rs.getInt(1));
                 usuario.setLogin(rs.getString("login"));
                 usuario.setEmail(rs.getString("email"));
-                Integer idPessoa = (rs.getInt("pessoa_id"));
+                Integer idPessoa = (rs.getInt("idPessoa"));
                 PessoaDAO pdao = new PessoaDAO();
                 usuario.setPessoa((PessoaBean) pdao.selecionar(idPessoa));
                 return usuario;
@@ -155,7 +155,7 @@ public class UsuarioDAO implements BaseDAO {
                     u.setId(rs.getInt("id"));
                     u.setLogin(rs.getString("login"));
                     u.setEmail(rs.getString("email"));
-                    int idPessoa = rs.getInt("pessoa_id");
+                    int idPessoa = rs.getInt("idPessoa");
                     PessoaDAO pdao = new PessoaDAO();
                     u.setPessoa((PessoaBean) pdao.selecionar(idPessoa));
                     return u;

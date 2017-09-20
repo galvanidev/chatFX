@@ -7,7 +7,6 @@ package mensagem.bean;
 
 import java.io.Serializable;
 import java.time.LocalTime;
-import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pessoa.bean.PessoaBean;
