@@ -7,26 +7,40 @@ package cadastro.registro.controller;
 
 import conexao.CadastroException;
 import conexao.ConexaoController;
+import conexao.ConexaoException;
 import javafx.util.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import main.controller.MainController;
 import org.controlsfx.control.PopOver;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.TextFieldFormatter;
-import util.ValidadorCPF;
 
 /**
  *
@@ -57,7 +71,7 @@ public class RegistroController {
     
     @FXML
     private void initialize() {
-        iniciaBinds();
+        // iniciaBinds();
         formataCpf();
         iniciaSexos();
     }
@@ -70,7 +84,7 @@ public class RegistroController {
     @FXML
     private void cadastrar() {
         txtErro.setText("");
-        if (validaEmail() & validaSenhas() & validaCPF()) {
+        if (validaEmail() & validaSenhas()) {
             PessoaBean pessoa = new PessoaBean();
             pessoa.setNome(nome.getText().toUpperCase());
             pessoa.setCpf(cpf.getText());   
@@ -89,7 +103,7 @@ public class RegistroController {
                 try {
                     ConexaoController.cadastra(usuario, pessoa);
                 } catch (CadastroException ex) {
-                    trataResposta(ex.getMessage());
+                    trataMensagens(ex.getMessage());
                 }
             });
         }
@@ -135,8 +149,9 @@ public class RegistroController {
     }
 
     private boolean validaSenhas() {
-        if (senha.getText().equals(confirmaSenha.getText()))
+        if (senha.getText().equals(confirmaSenha.getText())) {
             return true;
+        }
         newPop("As senhas não conferem").show(confirmaSenha);
         return false;
     }
@@ -145,19 +160,13 @@ public class RegistroController {
         Pattern regexEmail
                 = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = regexEmail.matcher(email.getText());
-        if (matcher.find()) 
-            return true;
-        newPop("E-mail inválido").show(email);
-        return false;
+        if (!matcher.find()) {
+            newPop("E-mail inválido").show(email);
+            return false;
+        }
+        return true;
     }
 
-    private boolean validaCPF() {
-        if (ValidadorCPF.isValido(cpf.getText()))
-            return true;
-        newPop("CPF inválido").show(cpf);
-        return false;
-    }
-     
     private PopOver newPop(String mensagem) {
         Label label = new Label(mensagem);
         label.getStyleClass().add("txtPop");
@@ -173,7 +182,7 @@ public class RegistroController {
         return popOver;
     }
 
-    private void trataResposta(String mensagem) {
+    private void trataMensagens(String mensagem) {
         if (mensagem.contains("_")) {
             String s[] = mensagem.split("_");
             for (String x : s) {
