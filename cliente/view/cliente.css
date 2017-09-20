@@ -198,3 +198,8 @@
     -fx-border-color: #FAFAFA;
     -fx-background-insets: 0;
 }
+
+.list-view .list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
