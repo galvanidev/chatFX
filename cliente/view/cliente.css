@@ -202,4 +202,9 @@
 .list-view .list-cell:empty {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+    -fx-cursor: default;
+}
+
+.jfx-dialog-layout .jfx-layout-heading {
+    -fx-background-color: red;
 }

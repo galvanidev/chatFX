@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cliente.controller.ClienteController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cliente.controller.ClienteController">
    <children>
-      <BorderPane fx:id="principal" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" styleClass="principal" stylesheets="@cliente.css">
+      <BorderPane fx:id="principal" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1000.0" styleClass="principal" stylesheets="@cliente.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
           <top>
               <BorderPane id="barraTopo" fx:id="barraTopo" prefHeight="55.0" prefWidth="200.0" styleClass="barraTopo" BorderPane.alignment="CENTER">
                   <center>
@@ -53,7 +53,7 @@
           <center>
               <BorderPane id="conteudo" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                   <bottom>
-                      <BorderPane prefHeight="53.0" prefWidth="200.0" style="-fx-background-color: fafafa;" BorderPane.alignment="CENTER">
+                      <BorderPane style="-fx-background-color: fafafa;" BorderPane.alignment="CENTER">
                           <center>
                               <TextField fx:id="tfMensagem" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#enterMensagem" prefHeight="51.0" prefWidth="583.0" promptText="Escrever uma mensagem..." style="-fx-background-color: fafafa; -fx-border-color: null; -fx-border-insets: 0 -10 -1 -1;" BorderPane.alignment="CENTER" />
                           </center>
@@ -66,7 +66,7 @@
                       </BorderPane>
                   </bottom>
                <center>
-                  <ScrollPane fx:id="scrollMensagens" cache="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" styleClass="scroll" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER">
+                  <ScrollPane fx:id="scrollMensagens" cache="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="scroll" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER">
                      <content>
                             <VBox fx:id="campoMensagens" alignment="CENTER" styleClass="campoMensagens">
                            <opaqueInsets>
@@ -85,9 +85,9 @@
               </BorderPane>
           </center>
          <left>
-            <ListView fx:id="listaUsuarios" onMouseClicked="#selecionaItem" prefWidth="300.0" BorderPane.alignment="CENTER_LEFT" />
+            <ListView fx:id="listaUsuarios" onMouseClicked="#selecionaItem" prefWidth="250.0" styleClass="scroll" BorderPane.alignment="CENTER_LEFT" />
          </left>
       </BorderPane>
-      <StackPane fx:id="dialogPane" prefHeight="675.0" prefWidth="1000.0" visible="false" />
+      <StackPane fx:id="dialogPane" prefHeight="675.0" prefWidth="1000.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

@@ -71,7 +71,7 @@ public class RegistroController {
     
     @FXML
     private void initialize() {
-        // iniciaBinds();
+        iniciaBinds();
         formataCpf();
         iniciaSexos();
     }

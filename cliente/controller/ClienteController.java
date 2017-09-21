@@ -5,12 +5,14 @@
  */
 package cliente.controller;
 
+import cliente.dialog.DialogController;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXListView;
 import conexao.ConexaoController;
 import java.awt.event.ActionEvent;
+import java.time.format.DateTimeFormatter;
 import usuario.model.UsuarioModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -22,6 +24,8 @@ import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
@@ -31,6 +35,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import main.view.MainView;
 import mensagem.model.MensagemModel;
+import org.apache.commons.lang3.StringUtils;
 import usuario.bean.UsuarioBean;
 import usuario.model.ListCellUsuario;
 
@@ -107,11 +112,13 @@ public class ClienteController {
     }
 
     private void openDialog(UsuarioBean selectedItem) {
+        // DialogController dc = DialogController.getInstance(selectedItem);
         JFXDialogLayout content = new JFXDialogLayout();
-        JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.CENTER);
-        Text nome = new Text();
-        content.setHeading(new Text(selectedItem.getPessoa().nomeFormatado() + " (" + selectedItem.getLogin() +" )"));
-        content.setBody(new Text("Conteúdo do meio"));
+        JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.LEFT);
+        Text nome = new Text("Head 2");
+        nome.setStyle("-fx-font-weight: bold;-fx-alignment: center-right;");
+        content.setHeading(nome);
+        content.setBody(new Text("Testando"));
         JFXButton botao = new JFXButton("Voltar");
         botao.setOnAction((event) -> {
             dialog.close();
@@ -119,7 +126,6 @@ public class ClienteController {
         content.setActions(botao);
         dialogPane.visibleProperty().bindBidirectional(dialog.visibleProperty());
         dialog.show();
-        
     }
     
     private void inicializaLista() {

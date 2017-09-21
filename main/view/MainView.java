@@ -28,8 +28,10 @@ public class MainView extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"));
             Scene scene = new Scene(root);
-            stage.setResizable(false);
+            stage.setMinWidth(1000);
+            stage.setMinHeight(675);
             stage.setScene(scene);
+            stage.centerOnScreen();
             primaryStage = stage;
             stage.show();
         } catch (IOException ex) {

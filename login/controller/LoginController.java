@@ -92,6 +92,7 @@ public class LoginController {
                 protected void succeeded() {
                     super.succeeded();
                     new ClienteView().start(MainView.primaryStage);
+                    MainView.primaryStage.setMaximized(true);
                 }
 
             };

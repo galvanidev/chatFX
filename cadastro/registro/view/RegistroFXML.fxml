@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="conteudo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="800.0" styleClass="conteudo" stylesheets="@registro.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cadastro.registro.controller.RegistroController">
+<HBox fx:id="conteudo" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="800.0" styleClass="conteudo" stylesheets="@registro.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cadastro.registro.controller.RegistroController">
    <children>
       <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="400.0">
          <center>
@@ -111,7 +111,7 @@
                         </Text>
                         <TextField fx:id="email" prefWidth="300.0" promptText="E-mail" styleClass="textField">
                            <tooltip>
-                              <Tooltip fx:id="tooltip" text="Empty Tooltip" />
+                              <Tooltip fx:id="tooltip" text="Digite seu e-mail" />
                            </tooltip></TextField>
                      </children>
                      <VBox.margin>
