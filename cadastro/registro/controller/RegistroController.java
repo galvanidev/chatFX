@@ -7,35 +7,20 @@ package cadastro.registro.controller;
 
 import conexao.CadastroException;
 import conexao.ConexaoController;
-import conexao.ConexaoException;
 import javafx.util.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import main.controller.MainController;
 import org.controlsfx.control.PopOver;
 import pessoa.bean.PessoaBean;
@@ -74,11 +59,6 @@ public class RegistroController {
         iniciaBinds();
         formataCpf();
         iniciaSexos();
-    }
-
-    @FXML
-    private void mouse() {
-        
     }
 
     @FXML

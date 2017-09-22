@@ -44,7 +44,7 @@
                                     <Font name="System Font" size="13.0" />
                                 </font>
                             </Label>
-                        <Label fx:id="btnConfiguracoes" styleClass="btnSair" text="CONFIGURAÇÕES" textAlignment="RIGHT" />
+                        <Label fx:id="btnAlterar" onMouseClicked="#alterar" styleClass="btnSair" text="ALTERAR DADOS" textAlignment="RIGHT" />
                      </children>
                   </HBox>
                </right>

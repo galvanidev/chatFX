@@ -205,6 +205,6 @@
     -fx-cursor: default;
 }
 
-.jfx-dialog-layout .jfx-layout-heading {
-    -fx-background-color: red;
+.dialog {
+    -fx-padding: 500;
 }

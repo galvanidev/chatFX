@@ -102,7 +102,7 @@
                         <Insets top="8.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox fx:id="boxEmail" onMouseDragged="#mouse" prefWidth="300.0">
+                  <HBox fx:id="boxEmail" prefWidth="300.0">
                      <children>
                         <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
                            <HBox.margin>

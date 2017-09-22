@@ -1,3 +1,4 @@
+import cliente.dialog.DialogController;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
@@ -22,6 +23,7 @@ public class TesteMensagem {
 
     public static void main(String[] args) throws ParseException {
         
+        /*
         MensagemBean mensagem;
         UsuarioBean usuarios[];
         usuarios = new UsuarioBean[1];
@@ -39,6 +41,6 @@ public class TesteMensagem {
         usuario.setPessoa(pessoa);
         //for (int i = 0; i < usuarios.length; i++) {
             usuarios[0] = usuario;
-        //}
+        //}*/
     }
 }

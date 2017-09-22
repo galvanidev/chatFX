@@ -5,14 +5,13 @@
  */
 package cliente.controller;
 
+import cadastro.altera.view.AlteraView;
 import cliente.dialog.DialogController;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXListView;
 import conexao.ConexaoController;
-import java.awt.event.ActionEvent;
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import usuario.model.UsuarioModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
@@ -21,23 +20,25 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.util.List;
-import javafx.application.Platform;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ListChangeListener;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.view.MainView;
 import mensagem.model.MensagemModel;
-import org.apache.commons.lang3.StringUtils;
 import usuario.bean.UsuarioBean;
-import usuario.model.ListCellUsuario;
+import usuario.view.ListCellUsuario;
 
 /**
  *
@@ -112,25 +113,36 @@ public class ClienteController {
     }
 
     private void openDialog(UsuarioBean selectedItem) {
-        // DialogController dc = DialogController.getInstance(selectedItem);
         JFXDialogLayout content = new JFXDialogLayout();
         JFXDialog dialog = new JFXDialog(dialogPane, content, JFXDialog.DialogTransition.LEFT);
-        Text nome = new Text("Head 2");
-        nome.setStyle("-fx-font-weight: bold;-fx-alignment: center-right;");
-        content.setHeading(nome);
-        content.setBody(new Text("Testando"));
+        content.setHeading(new Text("Dados de " + selectedItem.getPessoa().nomeFormatado()));
+        content.setBody(new DialogController(selectedItem).getModal());
         JFXButton botao = new JFXButton("Voltar");
         botao.setOnAction((event) -> {
             dialog.close();
         });
         content.setActions(botao);
         dialogPane.visibleProperty().bindBidirectional(dialog.visibleProperty());
-        dialog.show();
+                dialog.show();
     }
     
     private void inicializaLista() {
         listaUsuarios.setItems(UsuarioModel.getLista());
         listaUsuarios.setCellFactory(listCellUsuario -> new ListCellUsuario());
+    }
+    
+    @FXML
+    private void alterar() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/cadastro/altera/view/AlteraFXML.fxml"));
+            Scene scene = new Scene(root);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
+            stage.centerOnScreen();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

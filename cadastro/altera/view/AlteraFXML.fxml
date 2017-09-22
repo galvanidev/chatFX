@@ -1,11 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
+<AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="conteudo" stylesheets="@altera.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cadastro.altera.controller.AlteraController">
+   <children>
+      <VBox alignment="TOP_CENTER" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" styleClass="titulo" text="ALTERAÇÃO CADASTRAL" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <Label contentDisplay="CENTER" styleClass="subtitulo" text="ALTERE SUAS INFORMAÇÕES" />
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <TextField fx:id="nome" prefWidth="300.0" promptText="Nome completo" styleClass="textField">
+                     <tooltip>
+                        <Tooltip text="Digite seu nome completo" />
+                     </tooltip>
+                  </TextField>
+               </children>
+               <padding>
+                  <Insets top="8.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <DatePicker fx:id="dataNascimento" nodeOrientation="LEFT_TO_RIGHT" prefHeight="39.0" prefWidth="158.0" promptText="Nascimento" styleClass="textField">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <tooltip>
+                        <Tooltip text="Defina sua data de nascimento" />
+                     </tooltip>
+                  </DatePicker>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="boxEmail" prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <TextField fx:id="email" prefWidth="300.0" promptText="E-mail" styleClass="textField">
+                     <tooltip>
+                        <Tooltip fx:id="tooltip" text="Digite seu e-mail" />
+                     </tooltip>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <PasswordField fx:id="novaSenha" prefWidth="300.0" promptText="Nova senha" styleClass="textField">
+                     <tooltip>
+                        <Tooltip text="Confirme sua senha" />
+                     </tooltip>
+                  </PasswordField>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                     <HBox.margin>
+                        <Insets right="8.0" top="9.0" />
+                     </HBox.margin>
+                  </Text>
+                  <PasswordField fx:id="senha" prefWidth="300.0" promptText="Senha" styleClass="textField">
+                     <tooltip>
+                        <Tooltip text="Digite uma senha" />
+                     </tooltip>
+                  </PasswordField>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <Text fill="#ff214a" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+                     <HBox.margin>
+                        <Insets right="8.0" top="9.0" />
+                     </HBox.margin>
+                  </Text>
+                  <PasswordField fx:id="confirmaSenha" prefWidth="300.0" promptText="Confirma senha" styleClass="textField">
+                     <tooltip>
+                        <Tooltip text="Confirme sua senha" />
+                     </tooltip>
+                  </PasswordField>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <Label fx:id="txtErro" styleClass="txtErro">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox prefWidth="300.0" styleClass="boxCampos">
+               <children>
+                  <JFXButton fx:id="alterar" onAction="#alterar" prefHeight="35.0" prefWidth="150.0" styleClass="btnAlterar" text="Alterar">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="cancelar" onAction="#cancelar" prefHeight="35.0" prefWidth="150.0" styleClass="btnCancelar" text="Cancelar" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="8.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+   </children>
 </AnchorPane>

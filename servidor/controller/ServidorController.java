@@ -178,8 +178,10 @@ public final class ServidorController {
                             break;
                         // Atualiza seu cadastro
                         case ATUALIZA_CADASTRO:
+                            MensagemBean m = autentica(mensagem.getUsuario());
+                            if (m.getTipo().equals(TipoMensagem.SUCESSO))
                             resposta = atualizaCadastro(mensagem.getUsuario());
-                            pw.println(resposta.toJson() + "\n");
+                            //pw.println(resposta.toJson() + "\n");
                             pw.flush();
                             break;
                         case LOGIN:
