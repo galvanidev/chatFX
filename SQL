@@ -1,0 +1,18 @@
+﻿CREATE TABLE pessoa (
+	id serial not null,
+    nome varchar not null,
+    cpf char(14) not null unique,
+    dataNascimento date not null,
+    sexo char(1) not null,
+    primary key (id)
+);
+
+CREATE TABLE usuario (
+	id serial not null,
+    login varchar not null unique,
+    email varchar not null,
+    senha varchar not null,
+    idPessoa int not null unique,
+    primary key (id),
+    FOREIGN key (idPessoa) REFERENCES pessoa(id)
+);

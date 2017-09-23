@@ -26,6 +26,7 @@ import org.controlsfx.control.PopOver;
 import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.TextFieldFormatter;
+import util.ValidadorCPF;
 
 /**
  *
@@ -64,7 +65,7 @@ public class RegistroController {
     @FXML
     private void cadastrar() {
         txtErro.setText("");
-        if (validaEmail() & validaSenhas()) {
+        if (validaEmail() & validaSenhas() & validaCPF()) {
             PessoaBean pessoa = new PessoaBean();
             pessoa.setNome(nome.getText().toUpperCase());
             pessoa.setCpf(cpf.getText());   
@@ -147,6 +148,13 @@ public class RegistroController {
         return true;
     }
 
+    private boolean validaCPF() {
+        if (ValidadorCPF.isValido(cpf.getText()))
+            return true;
+        newPop("CPF inválido").show(cpf);
+        return false;
+    }
+    
     private PopOver newPop(String mensagem) {
         Label label = new Label(mensagem);
         label.getStyleClass().add("txtPop");
@@ -173,7 +181,7 @@ public class RegistroController {
             }
         } else {
             if (mensagem.contains("sucesso"))
-                System.out.println("Sucesso");
+                txtErro.setText(mensagem);
             else 
                 txtErro.setText(mensagem);
         }

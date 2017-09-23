@@ -34,7 +34,7 @@ public class UsuarioDAO implements BaseDAO {
     public Object inserir(Object obj) throws DaoException {
         try {
             con = ConexaoPostgreSql.getConexao();
-            String sql = "INSERT INTO usuario(login, email, senha, pessoa_id) VALUES(?, ?, ?, ?)";
+            String sql = "INSERT INTO usuario(login, email, senha, idPessoa) VALUES(?, ?, ?, ?)";
             pst = con.prepareStatement(sql);
             UsuarioBean usuario = (UsuarioBean) obj;
             pst.setString(1, usuario.getLogin());
@@ -44,7 +44,7 @@ public class UsuarioDAO implements BaseDAO {
             pst.execute();
             return usuario;
         } catch (SQLException ex) {
-            System.out.println(ex.getErrorCode());
+            ex.printStackTrace();
         } finally {
             ConexaoPostgreSql.fechar(pst);
             ConexaoPostgreSql.fechar(con);

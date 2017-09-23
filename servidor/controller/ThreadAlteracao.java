@@ -17,7 +17,6 @@ import pessoa.bean.PessoaBean;
 import pessoa.dao.PessoaDAO;
 import usuario.bean.UsuarioBean;
 import usuario.dao.UsuarioDAO;
-import util.DaoException;
 
 /**
  *

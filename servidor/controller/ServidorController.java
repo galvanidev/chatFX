@@ -113,7 +113,6 @@ public final class ServidorController {
         pw.flush();
         MensagemBean mensagemTodos = new MensagemBean(TipoMensagem.LOGIN, usuarioTratado);
         enviaMensagem(mensagemTodos);
-        System.out.println(mensagemUsuario.toJson());
     }
 
     public static void removeCliente(UsuarioBean u, BufferedReader in, PrintWriter pw, Socket socket) {

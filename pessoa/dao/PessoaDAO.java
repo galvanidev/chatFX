@@ -51,7 +51,7 @@ public class PessoaDAO implements BaseDAO {
             }
             return pessoa;
         } catch (SQLException ex) {
-            System.out.println(ex.getErrorCode());
+            ex.printStackTrace();
         } finally {
             ConexaoPostgreSql.fechar(pst);
             ConexaoPostgreSql.fechar(con);

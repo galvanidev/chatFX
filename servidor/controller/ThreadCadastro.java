@@ -63,6 +63,7 @@ public class ThreadCadastro {
             executor.shutdown();
         } catch (InterruptedException | ExecutionException ex) {
             mensagem = new MensagemBean(TipoMensagem.ERRO, "Favor tentar novamente mais tarde");
+            ex.printStackTrace();
         }
     }
 }
