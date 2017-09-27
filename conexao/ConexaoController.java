@@ -77,20 +77,43 @@ public class ConexaoController {
         }
     }
 
-    public static void altera(UsuarioBean usuario, PessoaBean pessoa) throws CadastroException {
+    public static void altera(UsuarioBean usuario, String senha) throws CadastroException {
         try {
-            usuario.setPessoa(pessoa);
-            MensagemBean mensagem = new MensagemBean(TipoMensagem.ATUALIZA_CADASTRO, usuario);
+            Socket s = new Socket(ConfiguracaoServidor.getHost(), ConfiguracaoServidor.getPort());
+            DataInputStream in = new DataInputStream(s.getInputStream());
+            DataOutputStream o = new DataOutputStream(s.getOutputStream());
+            PrintWriter p = new PrintWriter(o);
+            BufferedReader i = new BufferedReader(new InputStreamReader(in));
+            // Tenta autenticar
+            UsuarioBean usuarioLogin = new UsuarioBean(usuario.getLogin(), FrameWork.criptografar(senha));
+            MensagemBean mensagem = new MensagemBean(TipoMensagem.LOGIN, usuarioLogin);
             JSONObject json = mensagem.toJson();
-            pw.print(json + "\n");
-            pw.flush();
-            json = new JSONObject(in.readLine());
+            p.print(json + "\n");
+            p.flush();
+            json = new JSONObject(i.readLine());
             mensagem = MensagemBean.toObject(json);
+            fechaConexao(s, i, p);
+            if (mensagem.getTipo() == TipoMensagem.ERRO & (!mensagem.getMensagem().contains("logado"))) {
+                fechaConexao(s, i, p);
+                throw new CadastroException(mensagem.getMensagem());
+            }
+            usuario.setSenha(FrameWork.criptografar(usuario.getSenha()));
+            s = new Socket(ConfiguracaoServidor.getHost(), ConfiguracaoServidor.getPort());
+            in = new DataInputStream(s.getInputStream());
+            o = new DataOutputStream(s.getOutputStream());
+            p = new PrintWriter(o);
+            i = new BufferedReader(new InputStreamReader(in));
+            // Atualiza cadastro
+            mensagem = new MensagemBean(TipoMensagem.ATUALIZA_CADASTRO, usuario);
+            json = mensagem.toJson();
+            p.print(json + "\n");
+            p.flush();
+            json = new JSONObject(i.readLine());
+            mensagem = MensagemBean.toObject(json);
+            ConexaoController.usuario = mensagem.getUsuario();
             throw new CadastroException(mensagem.getMensagem());
         } catch (IOException ex) {
             Logger.getLogger(ConexaoController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            fechaConexao(servidor, in, pw);
         }
     }
 

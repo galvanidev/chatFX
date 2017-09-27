@@ -32,7 +32,7 @@ public final class ServidorController {
 
     public static Socket cliente;
     private static ServerSocket server;
-    public static final HashMap<UsuarioBean, PrintWriter> listaUsuarios = new HashMap<>();
+    public static HashMap<UsuarioBean, PrintWriter> listaUsuarios = new HashMap<>();
     private static Thread thread;
     private static DataInputStream is;
     private static DataOutputStream os;
@@ -84,21 +84,23 @@ public final class ServidorController {
                 break;
             case ATUALIZA_CADASTRO:
                 // Se for tipo atualização, envia pra todo mundo 
-                u = mensagem.getUsuario();
-                p = new PessoaBean(u.getPessoa().getId(), 
-                                u.getPessoa().getNome());
-                u.setPessoa(p);
+                mensagem.getUsuario().setSenha("");
                 m = mensagem;
-                m.setUsuario(u);
+                m.setUsuario(new UsuarioBean(m.getUsuario()));
+                HashMap<UsuarioBean, PrintWriter> lista = listaUsuarios;
                 listaUsuarios.entrySet().forEach((usuario) -> {
-                    if (usuario != m.getUsuario()) {
+                    if (!usuario.getKey().equals(mensagem.getUsuario())) {
                         usuario.getValue().println(m.toJson() + "\n");
                         usuario.getValue().flush();
                     } else {
-                        usuario.getValue().println(mensagem.toJson() + "\n");
-                        usuario.getValue().flush();
+                        PrintWriter print = usuario.getValue();
+                        lista.remove(usuario.getKey(), usuario.getValue());
+                        lista.put(m.getUsuario(), print);
+                        print.println(mensagem.toJson() + "\n");
+                        print.flush();
                     }
                 });
+                listaUsuarios = lista;
                 break;
         }
     }
@@ -172,16 +174,17 @@ public final class ServidorController {
                         // Cadastra novo usuário
                         case CADASTRA:
                             resposta = cadastraUsuario(mensagem.getPessoa(), mensagem.getUsuario());
+                            System.out.println(resposta.getMensagem());
                             pw.println(resposta.toJson() + "\n");
                             pw.flush();
                             break;
                         // Atualiza seu cadastro
                         case ATUALIZA_CADASTRO:
-                            MensagemBean m = autentica(mensagem.getUsuario());
-                            if (m.getTipo().equals(TipoMensagem.SUCESSO))
                             resposta = atualizaCadastro(mensagem.getUsuario());
-                            //pw.println(resposta.toJson() + "\n");
+                            resposta.setTipo(TipoMensagem.ATUALIZA_CADASTRO);
+                            pw.println(resposta.toJson() + "\n");
                             pw.flush();
+                            enviaMensagem(resposta);
                             break;
                         case LOGIN:
                             // Tenta autenticar

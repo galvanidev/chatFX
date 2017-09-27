@@ -122,7 +122,7 @@
                         <Insets />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton fx:id="cancelar" onAction="#cancelar" prefHeight="35.0" prefWidth="150.0" styleClass="btnCancelar" text="Cancelar" textFill="WHITE">
+                  <JFXButton fx:id="cancelar" onAction="#cancelar" prefHeight="35.0" prefWidth="150.0" styleClass="btnCancelar" text="_Fechar" textFill="WHITE">
                      <HBox.margin>
                         <Insets left="8.0" />
                      </HBox.margin>

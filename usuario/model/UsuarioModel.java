@@ -28,6 +28,8 @@ public class UsuarioModel implements Serializable {
 
     public static void add(UsuarioBean u) {
         Platform.runLater(() -> {
+            if (LISTA.contains(u))
+                LISTA.remove(u);
             LISTA.add(u);
         });
     }

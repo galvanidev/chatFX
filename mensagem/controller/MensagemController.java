@@ -83,7 +83,6 @@ public class MensagemController {
     }
 
     public static void notificaSaida(MensagemBean mensagem) {
-        System.out.println("iniciando notificação");
         VBox box = new VBox();
         Label texto = new Label(mensagem.getUsuario().getPessoa().nomeFormatado()
                 + " (" + mensagem.getUsuario().getLogin() + ") saiu");

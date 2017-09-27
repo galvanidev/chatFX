@@ -88,6 +88,11 @@ public class UsuarioBean implements Serializable {
         this.login = login;
     }
     
+    public UsuarioBean(String login, String senha) {
+        this.login = login;
+        this.senha = senha;
+    }
+    
     public UsuarioBean(UsuarioBean trataUsuario) {
         this.id = trataUsuario.getId();
         this.login = trataUsuario.getLogin();

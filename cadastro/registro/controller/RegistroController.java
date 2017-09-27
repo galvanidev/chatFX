@@ -27,6 +27,7 @@ import pessoa.bean.PessoaBean;
 import usuario.bean.UsuarioBean;
 import util.TextFieldFormatter;
 import util.ValidadorCPF;
+import util.ValidadorEmail;
 
 /**
  *
@@ -138,14 +139,11 @@ public class RegistroController {
     }
 
     private boolean validaEmail() {
-        Pattern regexEmail
-                = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = regexEmail.matcher(email.getText());
-        if (!matcher.find()) {
-            newPop("E-mail inválido").show(email);
-            return false;
+        if (ValidadorEmail.validar(email.getText())) {
+            return true;
         }
-        return true;
+        newPop("E-mail inválido").show(email);
+        return false;
     }
 
     private boolean validaCPF() {

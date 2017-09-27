@@ -69,7 +69,7 @@ public class ThreadConexao implements Runnable {
                         break;
                     // Quando um cliente sai do sistema
                     case ATUALIZA_CADASTRO:
-                        System.out.println("Alguém atualizou seus dados");
+                        UsuarioModel.add(mensagem.getUsuario());
                         break;
                 }
             }

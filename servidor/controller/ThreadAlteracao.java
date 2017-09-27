@@ -34,10 +34,9 @@ public class ThreadAlteracao {
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<MensagemBean> futureResult = executor.submit(() -> {
-
                 retornoP = (PessoaBean) pdao.alterar(pessoa);
                 retornoU = (UsuarioBean) udao.alterar(usuario);
-                mensagem.setPessoa(retornoP);
+                retornoU.setPessoa(retornoP);
                 mensagem.setUsuario(retornoU);
                 mensagem.setTipo(TipoMensagem.SUCESSO);
                 mensagem.setMensagem("Cadastro atualizado");
