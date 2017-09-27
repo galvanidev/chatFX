@@ -115,6 +115,11 @@ public class LoginController {
     }
 
     private void iniciaBinds() {
+        
+        tfUsuario.textProperty().addListener((ov, oldValue, newValue) -> {
+            tfUsuario.setText(newValue.toLowerCase());
+        });
+        
         btnEntrar.disableProperty().bind(tfUsuario.textProperty().isEmpty()
                 .or(tfSenha.textProperty().isEmpty()));
     }

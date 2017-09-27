@@ -111,7 +111,11 @@ public class RegistroController {
         nome.textProperty().addListener((ov, oldValue, newValue) -> {
             nome.setText(newValue.toUpperCase());
         });
-
+        
+        login.textProperty().addListener((ov, oldValue, newValue) -> {
+            login.setText(newValue.toLowerCase());
+        });
+        
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             email.setText(newValue.toLowerCase());
         });
